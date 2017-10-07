@@ -1,0 +1,27 @@
+{
+  "name": "node_add_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm run system-test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hinng0302/hkproperty.git"
+  },
+  "keywords": [
+    "hkproperty"
+  ],
+  "author": "Hin Ng <hinng0302@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hinng0302/hkproperty/issues"
+  },
+  "homepage": "https://github.com/hinng0302/hkproperty#readme",
+  "dependencies": {
+    "config": "^1.26.2",
+    "express": "^4.16.1",
+    "mysql": "^2.15.0"
+  }
+}
