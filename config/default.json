@@ -1,14 +1,21 @@
 {
+	"ENV": "PROD",
 	"PROD": {
-		"MYSQL_USER": "admin",
-		"MYSQL_PASSWORD": "moonriver",
-		"MYSQL_HOST": "127.0.0.1",
-		"MYSQL_PORT": "3306"
+		"SERVER_PORT": 3000,
+		"MYSQL": {
+			"user": "admin",
+			"password": "moonriver",
+			"host": "127.0.0.1",
+			"port": "3306"
+		}
 	},
 	"QA": {
-		"MYSQL_USER": "admin",
-		"MYSQL_PASSWORD": "moonriver",
-		"MYSQL_HOST": "127.0.0.1",
-		"MYSQL_PORT": "3306"
+		"SERVER_PORT": 3000,
+		"MYSQL": {
+			"user": "admin",
+			"password": "moonriver",
+			"host": "127.0.0.1",
+			"port": "3306"
+		}
 	}
 }
