@@ -20,8 +20,13 @@
   },
   "homepage": "https://github.com/hinng0302/hkproperty#readme",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "config": "^1.26.2",
     "express": "^4.16.1",
+    "form-data": "^2.3.1",
+    "fs": "0.0.1-security",
+    "knex": "^0.13.0",
+    "mv": "^2.1.1",
     "mysql": "^2.15.0"
   }
 }
