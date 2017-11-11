@@ -17,7 +17,8 @@ const knex = require('knex')({
 });
 
 function select_tablesname_from_database(cb){
-    knex('INFORMATION_SCHEMA.TABLES').select(['TABLE_NAME']).where({TABLE_SCHEMA: 'hkproperties'}).then(function(TABLE_NAME){
+    knex('INFORMATION_SCHEMA.TABLES').select(['TABLE_NAME']).where({TABLE_SCHEMA: 'hkproperties'}).then(function(TABLE_NAME) {
+        console.log(TABLE_NAME);
         cb(TABLE_NAME);
     });
 }

@@ -19,6 +19,17 @@ function selectall(cb){
     });
 }
 
+function select_sn_by_district_name(en, cb){
+    //select * from school_network left join district on district_id = district.id;
+    //['district_id', 'school_network.sn_name_zh', 'school_network.sn_name_en', 'district.name_zh', 'district.name_en']
+    knex.select(['district_id', 'school_network.sn_name_zh', 'school_network.sn_name_en', 'district.name_zh', 'district.name_en'])
+    .from('school_network').join('district', function(){
+        this.on('district_id' ,'=' ,'district.id').onIn('area',en);
+    }).then(function(result){
+        cb(result);
+    });
+}
+
 function select_by_district(district_id , cb){
     knex('school_network').where({district_id: district_id}).then(function(result){
         cb(result);
@@ -26,7 +37,7 @@ function select_by_district(district_id , cb){
 }
 
 function addschoolNetwork(sn_name_zh, sn_name_en, district_id,cb){
-    knex.insert({sn_name_zh: sn_name_zh, sn_name_en: sn_name_en, district_id: district_id}).into('school_network').then(function(id){
+    knex.insert({sn_name_zh: sn_name_zh, sn_name_en: sn_name_en, district_id: district_id}).into('school_network').then(function(id) {
         cb(id)
     }).catch(function(err){
         cb(err);
@@ -50,6 +61,7 @@ function remove(id, cb){
 module.exports = {
     selectall: selectall,
     select_by_district: select_by_district,
+    select_sn_by_district_name: select_sn_by_district_name,
     addschoolNetwork: addschoolNetwork,
     update: update,
     delete: remove

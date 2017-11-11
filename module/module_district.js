@@ -13,14 +13,28 @@ const knex = require('knex')({
 	connection: options
 });
 
-const fields = { id,name_zh,name_en,area };
 
-function select_district(cb){
+function selectall(cb){
 		 // select * from district
  	knex('district').select().then(function(result){
 		cb(result);
 	});
 }
+
+function select_district_by_id(id,cb){
+	// select * from district where id = id
+	knex('district').select().where({id: id}).then(function(result){
+	   cb(result);
+   });
+}
+
+function select_district_by_area(area,cb){
+	// select * from district where area = id
+	knex('district').select().where({area: area}).then(function(result){
+	   cb(result);
+   });
+}
+
 function create_district(data, cb){ 
 		 // insert into district() values(................)
  	knex('district').insert({
@@ -48,8 +62,10 @@ function delete_district(id, cb){
 		cb(false);
 	});
 }
+
 module.exports = {
-	select_district: select_district,
+	selectall: selectall,
+	select_district_by_id: select_district_by_id,
 	create_district: create_district,
 	update_district: update_district,
 	delete_district: delete_district

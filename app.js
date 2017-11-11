@@ -10,8 +10,9 @@ app.get('/', function(req,res){
     res.status(200).send('Hello');
 });
 app.use('/knex', require('./restapi/db_knexinit'));
-//app.use('/district', require('./restapi/db_district'));
-//app.use('/sn', require('./restapi/db_schoolnetwork'));
+app.use('/district', require('./restapi/db_district'));
+app.use('/sn', require('./restapi/db_schoolnetwork'));
+app.use('/agent', require('./restapi/db_agent'));
 
 app.use(function(req, res){
     res.status(404).send("404 Not Found!");

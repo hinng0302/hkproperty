@@ -2,6 +2,7 @@
 const mysql = require('mysql');
 const config = require('config');
 const ENV = config.get('ENV');
+const md5 = require('md5');
 const options = {
 	user: config.get(ENV).get("MYSQL").get("user"),
 	password: config.get(ENV).get("MYSQL").get("password"),
@@ -13,11 +14,14 @@ const knex = require('knex')({
 	connection: options
 });
 
-const fields = { id,agent_id,agent_password };
+//const fields = { id,login,agent_id,agent_password };
 
-function select_agent_password(cb){
-		 // select * from agent_password
- 	knex('agent_password').select().then(function(result){
+function select_agent_password(login, agent_password, cb){
+		 // select * from agent_password where agent_id = id and agent_password = md5('')
+	 knex('agent_password').select('agent_id').where(
+		{login: login, 
+		agent_password: md5(agent_password)
+		}).then(function(result){
 		cb(result);
 	});
 }

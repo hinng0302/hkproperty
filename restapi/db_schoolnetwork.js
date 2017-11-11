@@ -42,6 +42,26 @@ db_sn.get('/select_by_district/:district_id', function(req, res){
     });
 });
 
+
+db_sn.get('/select_by_district_name/:district_en', function(req, res){
+    var district_en = req.params.district_en;
+    sn.select_sn_by_district_name(district_en, function(result) {
+        console.log(result);
+        console.log(result.length);
+        if(result.length == 0 ){
+            res.status(404).json({
+                header: new Date,
+                content: "result not found"
+            });
+        }else {
+            res.status(200).json({
+                header: new Date,
+                content: result
+            });
+        }
+    });
+});
+
 db_sn.get('/create/name_zh/:name_zh/nema_en/:name_en/area/:area',function(req, res){
     var name_zh = req.params.name_zh
     var name_en = req.params.name_en

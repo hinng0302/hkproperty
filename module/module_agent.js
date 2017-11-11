@@ -13,10 +13,11 @@ const knex = require('knex')({
 	connection: options
 });
 
-const fields = { id,agent_name_zh,agent_name_en,agent_phone,agent_reg_no,status,created_at,modified_at };
+
 
 function select_agent(cb){
 		 // select * from agent
+		 // where 
  	knex('agent').select().then(function(result){
 		cb(result);
 	});

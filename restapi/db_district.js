@@ -4,6 +4,7 @@ const express = require("express");
 const config = require('config');
 const bodyParser = require('body-parser');
 const dt = require("./../module/module_district");
+const Promise = require('promise');
 const db_distict = express.Router();
 
 db_distict.use(function(req, res, next){
@@ -14,6 +15,9 @@ db_distict.use(function(req, res, next){
 db_distict.use(bodyParser.urlencoded({ extended: true }));
 db_distict.use(bodyParser.json());
 
+
+
+
 db_distict.get('/ping', function(req, res){
     dt.selectall(function(data){
         res.status(200).json({
@@ -23,6 +27,15 @@ db_distict.get('/ping', function(req, res){
     });
 });
 
+db_distict.get('/select_by_district/:dist', function(req, res){
+    var dist = req.params.dist;
+    dt.select_district_by_id(dist, function(result){
+        res.status(200).json({
+            header: new Date,
+            content: result
+        })
+    });
+});
 db_distict.get('/select_by_area/:area', function(req, res){
     var area = req.params.area;
     dt.selectarea(area, function(data){
