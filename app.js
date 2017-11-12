@@ -3,11 +3,23 @@
 const express = require("express");
 const config = require("config");
 const app = express();
+var jade = require('jade');
 const in_server = config.get("ENV");
+app.set('view engine', 'jade');
 
 
 app.get('/', function(req,res){
     res.status(200).send('Hello');
+});
+
+app.get('/testpage', function(req, res){
+    res.render('./index',
+        {
+            pageTitle: 'hkproperty',
+            title:'testing',
+            items: [2014, 'Hello', 'World', 'Node.js']
+        }
+    );
 });
 app.use('/knex', require('./restapi/db_knexinit'));
 app.use('/district', require('./restapi/db_district'));

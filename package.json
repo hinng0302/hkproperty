@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/hinng0302/hkproperty#readme",
   "dependencies": {
+    "jade": "^1.11.0",
     "body-parser": "^1.18.2",
     "config": "^1.26.2",
     "express": "^4.16.1",
