@@ -3,18 +3,40 @@ html(lang="en")
   head
     title= pageTitle
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/views/front-end.css')
     script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js')
   body
-    h1 Jade - node template engine
-    #container
-      - if (youAreUsingJade)
-         You are amazing
-      - else
-         Get on it!
-         Get on it!
-         Get on it!
-         Get on it!
-        
+  br
+  .container
+    .row
+      .col-md-10.col-xs-12
+        p HK Property
+      .col-md-2.col-xs-12
+        p Hin Ng
+  nav.navbar-default.navbar-nav
+    .container
+      .container.bg-transparent
+        .navbar
+          ul.nav
+            li.current.active 
+              a(href="/webapp")
+                span.navtitle Main Page
+            li.current 
+              a(href="/webapp/selling")
+                span.navtitle Sell
+            li.current 
+              a(href="/webapp/rent")
+                span.navtitle Rental 
+            li.current 
+              a(href="")
+                span.navtitle Branch
+            li.current 
+              a(href="")
+                span.navtitle Agent
+            li.current 
+              a(href="")
+                span.navtitle Login
+  .container
     block content

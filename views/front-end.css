@@ -1,0 +1,39 @@
+.navbar-default {
+    background-color: black;
+    list-style: none;
+}
+.property_list_details{
+    list-style: none;
+    padding:0;
+}
+.navbar {
+    padding: 0px;
+}
+.current {
+    background-color: black;
+    padding: 10px 20px;
+}
+.current:hover {
+    background-color: #03b4ea;
+}
+
+ul> ul.nav {
+    padding: 8px;
+}
+.navtitle{
+    color: white;
+}
+.active {
+    color: white;
+    background-color: #03b4ea;
+}
+.property_details {
+    padding: 5px;
+}
+.property_details:hover {
+    background-color: #F3F3B4;
+}
+.blackcolor {
+    border: 1px black solid;
+    width: 100%;
+}

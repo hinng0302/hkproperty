@@ -1,3 +1,32 @@
-p all items in list
-each item in items
-    li= 'item: ' + item
+script.
+    function btn_url(str){
+        window.location.assign( "/webapp/property/details/"+str);
+    }
+.row
+    .col-lg-12.col-md-12.col-xs-12
+        .property
+            .col-md-12.col-xs-12
+                each property in properties
+                    .container
+                        .row
+                            .col-md-9.col-xs-12
+                                .name
+                                    span='(Ref.no: '+property.ref_no+') '+property.estate_name +' - '+property.estate_name_en 
+                        .row
+                            .col-md-4.col-xs-12
+                                .img(style="width:100%;")
+                                    img(src="https://wm.midland.com.hk/img_wm.php?w=740&h=570&wm=mr&crop=N&bg=dddddd&src=http://img.midland.com.hk/photo_db/unit/682/AA0233682_24.jpg" style="width:100%;")
+                            .col-md-4.col-xs-12
+                                .container
+                                    .col-xs-12
+                                        ul.property_list_details
+                                            li.property_details='客房：'+ property.num_room
+                                            li.property_details='客廳：'+ property.num_livingrm
+                                            li.property_details='建築面積:'+ property.gross_building_area
+                                            li.property_details='實用面積:'+ property.practical_building_area
+                                            li.property_details='車位:'+ property.car_park
+                                            - if(property.selling_price != null)
+                                                li.property_details= '售價: $'+property.selling_price
+                                            - if(property.rental_price != null)
+                                                li.property_details='租價: $'+property.rental_price
+                                            button.btn.btn-primary(onclick="btn_url('"+property.ref_no+"')") View Details

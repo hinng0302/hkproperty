@@ -13,14 +13,56 @@ const knex = require('knex')({
 	connection: options
 });
 
-const fields = { id,district,estate_name,block_number,floor_number,flat_number,gross_building_area,practical_building_area,num_room,num_livingrm,car_park,selling_price,rental_price,description,lat,lng,ref_no,status,created_at,modified_at };
-
-function select_property(cb){
-		 // select * from property
- 	knex('property').select().then(function(result){
+// const fields = { id,district,estate_name,block_number,floor_number,flat_number,gross_building_area,practical_building_area,num_room,num_livingrm,car_park,selling_price,rental_price,description,lat,lng,ref_no,status,created_at,modified_at };
+function select_property_by_id(id, cb) {
+	knex('property').where('id',id).then(function(result){
 		cb(result);
 	});
 }
+
+function select_selling_property(cb){
+	// select * from property where selling_price is not null;
+	knex('property').whereNotNull('selling_price').then(function(result){
+		cb(result);
+	});
+}
+function select_rent_property(cb){
+	// select * from property where rental_price is not null;
+	knex('property').whereNotNull('rental_price').then(function(result){
+		cb(result);
+	});
+}
+
+function select_random_property(cb){
+	// select * from property order by rand() limit 9;
+	knex('property').orderByRaw('rand()').limit(9).then(function(result){
+		cb(result);
+	});
+}
+
+function select_property_by_ref_no(ref_no, cb){
+	knex('property').where(
+		'ref_no', ref_no
+	).then(function(result){
+		cb(result);
+	});
+}
+
+function select_property_id_by_ref_no(ref_no, cb){
+	knex('property').select('id').where(
+		'ref_no', ref_no
+	).then(function(result){
+		cb(result);
+	});
+}
+
+function select_property_full_details_by_property_id(property_id,cb){
+	knex.select('*').from('property').leftJoin('property_owner_relation', 'property.id','property_owner_relation.property_id')
+	.leftJoin('property_owner', 'property_owner.id', 'property_owner_relation.owner_id').where('property.id', property_id).then(function(result){
+		cb(result);
+	});
+}
+
 function create_property(data, cb){ 
 		 // insert into property() values(................)
  	knex('property').insert({
@@ -49,7 +91,13 @@ function delete_property(id, cb){
 	});
 }
 module.exports = {
-	select_property: select_property,
+	select_property_by_id: select_property_by_id,
+	select_selling_property: select_selling_property,
+	select_rent_property: select_rent_property,
+	select_random_property: select_random_property,
+	select_property_by_ref_no: select_property_by_ref_no,
+	select_property_id_by_ref_no:select_property_id_by_ref_no,
+	select_property_full_details_by_property_id: select_property_full_details_by_property_id,
 	create_property: create_property,
 	update_property: update_property,
 	delete_property: delete_property

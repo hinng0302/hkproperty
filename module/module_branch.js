@@ -13,8 +13,6 @@ const knex = require('knex')({
 	connection: options
 });
 
-// const fields = { id,branch_name,manager_id,location,phone,branch_code,created_at,modified_at };
-
 function select_branch(cb){
 		 // select * from branch
  	knex('branch').select().then(function(result){

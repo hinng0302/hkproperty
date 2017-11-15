@@ -13,13 +13,19 @@ const knex = require('knex')({
 	connection: options
 });
 
-const fields = { id,owner_id,property_id,created_time };
+// const fields = { id,owner_id,property_id,created_time };
 
 function select_property_owner_relation(cb){
 		 // select * from property_owner_relation
  	knex('property_owner_relation').select().then(function(result){
 		cb(result);
 	});
+}
+function select_property_owner_relation_by_property_id(property_id,cb){
+	// select * from property_owner_relation
+knex('property_owner_relation').where('property_id', property_id).where('status','enable').then(function(result){
+   cb(result);
+});
 }
 function create_property_owner_relation(data, cb){ 
 		 // insert into property_owner_relation() values(................)
@@ -50,6 +56,7 @@ function delete_property_owner_relation(id, cb){
 }
 module.exports = {
 	select_property_owner_relation: select_property_owner_relation,
+	select_property_owner_relation_by_property_id: select_property_owner_relation_by_property_id,
 	create_property_owner_relation: create_property_owner_relation,
 	update_property_owner_relation: update_property_owner_relation,
 	delete_property_owner_relation: delete_property_owner_relation
