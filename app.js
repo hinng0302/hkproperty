@@ -9,7 +9,7 @@ var path = require('path');
 
 const in_server = config.get("ENV");
 app.set('view engine', 'jade');
-
+app.set('trust proxy', 1);
 app.get('/views/front-end.css', function(req,res){
     var options = {
         root: __dirname + '/views',
@@ -26,15 +26,14 @@ app.get('/views/front-end.css', function(req,res){
 app.get('/', function(req,res){
     res.status(200).send('Hello');
 });
-
-app.use('/webapp',require('./webpage/index'));
-
-app.use('/knex', require('./restapi/db_knexinit'));
+app.use('/agent', require('./restapi/db_agent'));
+// app.use('/knex', require('./restapi/db_knexinit'));
 app.use('/district', require('./restapi/db_district'));
 app.use('/sn', require('./restapi/db_schoolnetwork'));
-app.use('/agent', require('./restapi/db_agent'));
+
 app.use('/property', require('./restapi/db_property'));
 
+app.use('/webapp',require('./webpage/index'));
 app.use(function(req, res){
     res.status(404).send("404 Not Found!");
 });

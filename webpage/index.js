@@ -7,19 +7,47 @@ var jade = require('jade');
 var fs = require('fs');
 var path = require('path');
 app = express.Router();
+
 app.use(session({
     secret: 'edwjrbplpjsttdhjenytwqhfbaifbfpwfvqkfyxknvwiznywtksccbxguxtfoermvccixielfnjkubhigkcvydcxmkevpupjtvumphunoksocdbfqbxzockphvgymihw', // 建议使用 128 个字符的随机字符串
-    cookie: { maxAge: 60 * 1000 }
+    cookie: { maxAge: 60 * 1000 * 60 }
   }));
+app.use(function(req, res, next) {
+    var sess = req.session;
+    if (sess.views) {
+        sess.views++
+        // res.setHeader('Content-Type', 'text/html')
+        // res.write('<p>views: ' + sess.views + '</p>')
+        // res.write('<p>expires in: ' + (sess.cookie.maxAge / 1000) + 's</p>')
+        console.log("sess: ",sess.views);
+        console.log("sess: ",sess);
+        next()
+    } else {
+        sess.views = 1
+        res.end('welcome to the session demo. refresh!')
+    }
+});
 app.get('/', function(req, res){
     mp.select_random_property(function(result){
-        res.render('../views/index',
-        {
-            pageTitle: 'hkproperty',
-            title:'Featured Property',
-            properties: result
-        })});
+        if(req.session.is_login) {
+            res.render('../views/index',
+            {
+                pageTitle: 'hkproperty',
+                agent: req.session.agent,
+                title:'Featured Property',
+                properties: result
+            });
+        } else {
+            res.render('../views/index',
+            {
+                pageTitle: 'hkproperty',
+                title:'Featured Property',
+                properties: result
+            });
+        }
+    });
 });
+
 app.get('/selling', function(req,res){
     mp.select_selling_property(function(result){
         res.render('../views/index',

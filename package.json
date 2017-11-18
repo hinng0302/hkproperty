@@ -32,5 +32,8 @@
     "mv": "^2.1.1",
     "mysql": "^2.15.0",
     "promise": "^8.0.1"
+  },
+  "devDependencies": {
+    "video.js": "^6.2.8"
   }
 }
