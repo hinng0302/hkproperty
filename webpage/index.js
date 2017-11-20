@@ -15,10 +15,7 @@ app.use(session({
 app.use(function(req, res, next) {
     var sess = req.session;
     if (sess.views) {
-        sess.views++
-        // res.setHeader('Content-Type', 'text/html')
-        // res.write('<p>views: ' + sess.views + '</p>')
-        // res.write('<p>expires in: ' + (sess.cookie.maxAge / 1000) + 's</p>')
+        sess.views++;
         console.log("sess: ",sess.views);
         console.log("sess: ",sess);
         next()
