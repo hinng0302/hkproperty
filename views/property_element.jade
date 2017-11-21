@@ -4,8 +4,28 @@
             .col-md-9.col-xs.12 
                 .row
                     .col-md-6.col-xs-12
-                        .blackcolor 
-                            div=properties[0].estate_name
+                        .blackcolor(style="height:300px;")
+                            img.property_details_pic(src=properties.image_page)
                     .col-md-6.col-xs-12
-
+                        .row
+                            .col-md-6.col-xs-12
+                                span 建築面積(ft')
+                            .col-md-6.col-xs-12
+                                h5=properties.practical_building_area
+                            .col-md-6.col-xs-12
+                                span 實用面積(ft')
+                            .col-md-6.col-xs-12
+                                h5=properties.gross_building_area
+                            .col-md-6.col-xs-12
+                                span 房間
+                            .col-md-6.col-xs-12
+                                h5=properties.num_room
+                            .col-md-6.col-xs-12
+                                span 客廳
+                            .col-md-6.col-xs-12
+                                h5=properties.num_livingrm
+                            .col-md-12.col-xs-12
+                                span Description
+                            .col-md-12.col-xs-12
+                                h5=properties.description
             .col-md-3.col-xs.12 asdf

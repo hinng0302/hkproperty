@@ -8,29 +8,14 @@ var fs = require('fs');
 var path = require('path');
 app = express.Router();
 
-app.use(session({
-    secret: 'edwjrbplpjsttdhjenytwqhfbaifbfpwfvqkfyxknvwiznywtksccbxguxtfoermvccixielfnjkubhigkcvydcxmkevpupjtvumphunoksocdbfqbxzockphvgymihw', // 建议使用 128 个字符的随机字符串
-    cookie: { maxAge: 60 * 1000 * 60 }
-  }));
-app.use(function(req, res, next) {
-    var sess = req.session;
-    if (sess.views) {
-        sess.views++;
-        console.log("sess: ",sess.views);
-        console.log("sess: ",sess);
-        next()
-    } else {
-        sess.views = 1
-        res.end('welcome to the session demo. refresh!')
-    }
-});
 app.get('/', function(req, res){
     mp.select_random_property(function(result){
         if(req.session.is_login) {
             res.render('../views/index',
             {
                 pageTitle: 'hkproperty',
-                agent: req.session.agent,
+                agent: req.session.agent.agent_name_en,
+                agent_details: req.session.agent,
                 title:'Featured Property',
                 properties: result
             });
@@ -47,21 +32,46 @@ app.get('/', function(req, res){
 
 app.get('/selling', function(req,res){
     mp.select_selling_property(function(result){
-        res.render('../views/index',
-        {
-            pageTitle: 'hkproperty',
-            title:'Selling',
-            properties: result
-        })});
+        if(req.session.is_login){
+            res.render('../views/index',
+            {
+                pageTitle: 'hkproperty',
+                title:'Selling',
+                agent: req.session.agent.agent_name_en,
+                agent_details: req.session.agent,
+                properties: result
+            });
+        }else {
+            res.render('../views/index',
+            {
+                pageTitle: 'hkproperty',
+                title:'Selling',
+                properties: result
+            });
+        }
+    });
 });
 app.get('/rent', function(req,res){
     mp.select_rent_property(function(result){
-        res.render('../views/index',
-        {
-            pageTitle: 'hkproperty',
-            title:'Rental',
-            properties: result
-        })});
+        if(req.session.is_login){
+            res.render('../views/index',
+            {
+                pageTitle: 'hkproperty',
+                title:'Rental',
+                agent: req.session.agent.agent_name_en,
+                agent_details: req.session.agent,
+                properties: result
+            });
+        }else {
+            res.render('../views/index',
+            {
+                pageTitle: 'hkproperty',
+                title:'Rental',
+                properties: result
+            });
+        }
+        
+    });
 });
 app.get('/property/details/:ref_no', function(req,res){
     var promise = new Promise(function (resolve,reject){
@@ -85,8 +95,8 @@ app.get('/property/details/:ref_no', function(req,res){
         console.log(result);
         res.render('../views/property_details', {
             pageTitle: 'hkproperty: ' +result[0].estate_name_en,
-            title: result[0].estate_name_en,
-            properties: result
+            title: result[0].ref_no+" "+result[0].estate_name_en,
+            properties: result[0]
         });
     });
 });

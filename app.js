@@ -3,14 +3,32 @@
 const express = require("express");
 const config = require("config");
 const app = express();
+const session = require('express-session');
 var jade = require('jade');
 var fs = require('fs');
 var path = require('path');
-
+app.use(session({
+    secret: 'edwjrbplpjsttdhjenytwqhfbaifbfpwfvqkfyxknvwiznywtksccbxguxtfoermvccixielfnjkubhigkcvydcxmkevpupjtvumphunoksocdbfqbxzockphvgymihw', // 建议使用 128 个字符的随机字符串
+    cookie: { maxAge: 60 * 1000 * 60 }
+}));
 const in_server = config.get("ENV");
 app.set('view engine', 'jade');
 app.set('trust proxy', 1);
-app.get('/views/front-end.css', function(req,res){
+app.get("/images/:folder/:file", function(req,res){
+    var options = {
+        root:__dirname+'/images',
+        dotfiles: 'deny',
+        headers: {
+            'x-timestamp': Date.now(),
+            'x-sent': true
+        }
+    };
+
+    res.sendFile('./'+req.params.folder+'/'+req.params.file, options, function(err){
+        if(err) console.log('images, error:'+ err);
+    });
+});
+app.get('/views/:cssfile', function(req,res){
     var options = {
         root: __dirname + '/views',
         dotfiles: 'deny',

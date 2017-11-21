@@ -37,3 +37,7 @@ ul> ul.nav {
     border: 1px black solid;
     width: 100%;
 }
+.property_details_pic {
+    height: 100%;
+    margin: 0px auto;
+}

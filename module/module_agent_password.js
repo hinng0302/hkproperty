@@ -3,6 +3,7 @@ const mysql = require('mysql');
 const config = require('config');
 const ENV = config.get('ENV');
 var md5 = require('md5');
+const agent_module = require('./module_agent');
 const options = {
 	user: config.get(ENV).get("MYSQL").get("user"),
 	password: config.get(ENV).get("MYSQL").get("password"),
@@ -23,8 +24,14 @@ function select_agent_password(login, agent_password, cb){
 		{
 			login: login, 
 			agent_password: md5(agent_password)
-		}).then(function(result){
-		cb(result);
+		}).then(function(result) {
+			if(result.length === 1){
+				agent_module.select_agent_by_id(result[0].agent_id, function(data){
+					cb(data);
+				})
+			}else {
+				cb(result);
+			}
 	});
 }
 function create_agent_password(data, cb){ 

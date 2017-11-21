@@ -13,7 +13,11 @@ const knex = require('knex')({
 	connection: options
 });
 
-
+function select_agent_by_id(id, cb){
+	knex('agent').where({id, id}).then(function (result){
+		cb(result);
+	});
+}
 
 function select_agent(cb){
 		 // select * from agent
@@ -50,6 +54,7 @@ function delete_agent(id, cb){
 	});
 }
 module.exports = {
+	select_agent_by_id: select_agent_by_id,
 	select_agent: select_agent,
 	create_agent: create_agent,
 	update_agent: update_agent,
