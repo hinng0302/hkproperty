@@ -11,7 +11,7 @@ const db_agent = express.Router();
 
 db_agent.use(session({
     secret: 'edwjrbplpjsttdhjenytwqhfbaifbfpwfvqkfyxknvwiznywtksccbxguxtfoermvccixielfnjkubhigkcvydcxmkevpupjtvumphunoksocdbfqbxzockphvgymihw',
-    cookie: { maxAge: 60 * 1000 * 60 }
+    cookie: { maxAge: 60000 * 60 } // 1 mins * 60
 }));
 
 
@@ -34,7 +34,7 @@ db_agent.get('/logout', function(req, res){
 db_agent.post('/login',function(req, res) {
     var login=req.body.username;
     var pwd =req.body.password;
-    console.log(login,pwd);
+    // console.log(login,pwd);
     agent_password.select_agent_password(login,pwd, function(result){
         var sess = req.session;
         if(result.length > 0){
@@ -54,7 +54,8 @@ db_agent.post('/login',function(req, res) {
                 header: {
                     response_at: new Date
                 },
-                result: 0
+                result: 0,
+                content: "username/password incorrect"
             });
         }
     });

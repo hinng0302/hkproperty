@@ -40,8 +40,19 @@ ul> ul.nav {
 .property_details_pic {
     height: 100%;
     margin: 0px auto;
-}
-.map {
     width: 100%;
-    
+}
+#map {
+    height: 300px;
+    width: 100%;
+}
+.float_left{
+    float:right;
+    padding:5px;
+}
+.price {
+    color:red;
+}
+.gary_background{
+    background-color: #DEDEDE;
 }

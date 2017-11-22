@@ -8,7 +8,11 @@ var fs = require('fs');
 var path = require('path');
 app = express.Router();
 
-app.get('/', function(req, res){
+app.route('/').all(function(req, res, next){
+    console.log(req.method);
+    console.log(req.session);
+    next();
+}).get(function(req, res){
     mp.select_random_property(function(result){
         if(req.session.is_login) {
             res.render('../views/index',
@@ -28,6 +32,8 @@ app.get('/', function(req, res){
             });
         }
     });
+}).post(function(req, res){
+    res.send("not implemented");
 });
 
 app.get('/selling', function(req,res){
@@ -76,28 +82,54 @@ app.get('/rent', function(req,res){
 app.get('/property/details/:ref_no', function(req,res){
     var promise = new Promise(function (resolve,reject){
         mp.select_property_id_by_ref_no(req.params.ref_no,function(result){
-            console.log(result);
             if(result.length == 0){
                 reject('error, result not found');
             }
-            resolve(result);
+            var ret ={id: result[0].id};
+            resolve(ret);
         })
     });
     promise.then(function(result){
         return new Promise(function(resolve, reject){
-            mp.select_property_full_details_by_property_id(result[0].id, function(result){
-                console.log(result[0].id);
-                console.log(result);
+            var id = result.id;
+            mp.select_property_full_details_by_property_id(id, function(result_property){
+                // console.log(result[0].id);
+                // console.log(result_property);
+                result.property = result_property[0];
                 resolve(result);
             });
         });
     }).then(function(result){
+        console.log("select property_owner: ");
         console.log(result);
-        res.render('../views/property_details', {
-            pageTitle: 'hkproperty: ' +result[0].estate_name_en,
-            title: result[0].ref_no+" "+result[0].estate_name_en,
-            properties: result[0]
+        return new Promise(function(resolve, reject){
+            var prop_owner =require("../module/module_property_owner_relation");
+            prop_owner.select_property_owner_relation_by_property_id(result.id, function(property_owner){
+                console.log(property_owner);
+                result.owners = property_owner;
+                resolve(result);
+            });
         });
+    }).then(function(result){
+        console.log("result:");
+        console.log(result);
+        if(req.session.is_login){
+            res.render('../views/property_details', {
+                pageTitle: 'hkproperty: ' +result.property.estate_name_en,
+                title: "( Ref:"+result.property.ref_no+") "+result.property.estate_name_en,
+                agent: req.session.agent.agent_name_en,
+                agent_details: req.session.agent,
+                properties: result.property,
+                owners: result.owners
+            });
+        }else {
+            res.render('../views/property_details', {
+                pageTitle: 'hkproperty: ' +result.property.estate_name_en,
+                title: "( Ref:"+result.property.ref_no+") "+result.property.estate_name_en,
+                properties: result.property,
+                owners: result.owners
+            });
+        }
     });
 });
 

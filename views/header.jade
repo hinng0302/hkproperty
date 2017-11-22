@@ -4,15 +4,9 @@ html(lang="en")
     title= pageTitle
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css')
     link(rel='stylesheet', href='/views/'+Math.random()+'front-end.css')
-    //- script(src='https://code.jquery.com/jquery-3.2.1.slim.min.js')
     script(src="https://code.jquery.com/jquery-3.1.0.min.js")
     script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js')
-    //- script(src='http://vjs.zencdn.net/6.2.8/video.js')
-    //- script(src="https://unpkg.com/videojs-flash/dist/videojs-flash.js")
-    //- script(src="https://unpkg.com/videojs-contrib-hls/dist/videojs-contrib-hls.js")
-    //- script(src="https://unpkg.com/@videojs/http-streaming/dist/videojs-http-streaming.js")
-    //- link(rel='stylesheet', href='http://vjs.zencdn.net/6.2.8/video-js.css')
   body
     if(agent == null)
       script.
@@ -24,8 +18,9 @@ html(lang="en")
             if(data.result === 1){
                 location.reload();
             }
-          }).fail(function(data){
-            console.log(data);
+          }).fail(function(jqXHR, textStatus){
+            var content = JSON.parse(jqXHR.responseText).content;
+            alert(content);
           });
         }
     else
@@ -119,7 +114,10 @@ html(lang="en")
               a(href="")
                 span.navtitle Agent
             li.current 
-              a(href="")
-                span.navtitle Login
+              a(href="#")
+                if(agent == null)
+                  span.navtitle(data-toggle="modal" data-target="#login_module") Login
+                else
+                  span.navtitle(onclick="logout()") Logout
   .container
     block content

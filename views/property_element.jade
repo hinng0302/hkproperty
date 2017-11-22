@@ -2,6 +2,7 @@
     .container
         .row
             .col-md-9.col-xs.12 
+                H3 Property Details
                 .row
                     .col-md-6.col-xs-12
                         .blackcolor(style="height:400px;")
@@ -9,6 +10,11 @@
                     .col-md-6.col-xs-12
                         .row
                             ul.property_list_details
+                                li.property_details
+                                    .col-md-6.col-xs-12
+                                        span District
+                                    .col-md-6.col-xs-12
+                                        h5=properties.name_en
                                 li.property_details
                                     .col-md-6.col-xs-12
                                         span 建築面積(ft')
@@ -35,10 +41,40 @@
                                     .col-md-12.col-xs-12
                                         h5=properties.description
                 .row
+                    .container.gary_background
+                        .col-md-12.col.xs-12
+                            if(properties.selling_price == null)
+                                .float_left 租價
+                                .float_left.price="$"+properties.rental_price
+                            else 
+                                .float_left 賣價
+                                .float_left.price="$"+properties.selling_price
+                .row
                     .col-md-12.col-xs-12
-                        .map.blackcolor
+                        h3.title Map
+                        script(async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSigdFn0QZV4cylh-e5oCRXoJI9YWQcEE&callback=initMap")
+
+                        #map
                             script.
-                                function map(){
-                                    
+                                var lat = "#{properties.lat}";
+                                var lng = "#{properties.lng}";
+                                var map;
+                                function initMap(){
+                                    map= new google.maps.Map(document.getElementById('map'), {
+                                        zoom: 17,
+                                        center: new google.maps.LatLng(lat,lng),
+                                        mapTypeId: 'terrain'
+                                    });
+                                    var latLng = new google.maps.LatLng(lat,lng);
+                                    var marker = new google.maps.Marker({
+                                        position: latLng,
+                                        map: map
+                                    });
                                 }
-            .col-md-3.col-xs.12 asdf
+                                
+                                
+
+            .col-md-3.col-xs.12 
+                h3 Property Owner(s)
+                .container
+                    include owner_list
