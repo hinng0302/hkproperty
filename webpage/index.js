@@ -37,28 +37,110 @@ app.route('/').all(function(req, res, next){
 });
 
 app.get('/selling', function(req,res){
-    mp.select_selling_property(function(result){
+    var parmise = new Promise(function(resolve,reject){
+        mp.select_count_selling_property(function(result){
+            var ret = {total: result};
+            resolve(ret);
+        });
+    });
+    parmise.then(function(result){
+        return new Promise(function(resolve, reject){
+            mp.select_selling_property(0, function(property_data){
+                result.property= property_data;
+                resolve(result);
+            });
+        });
+    }).then(function(result){
+        var ret = {
+            maxpage: Math.ceil(result.total/10),
+            pageTitle: 'hkproperty',
+            title: 'Selling',
+            properties: result.property
+        };
         if(req.session.is_login){
-            res.render('../views/index',
-            {
-                pageTitle: 'hkproperty',
-                title:'Selling',
-                agent: req.session.agent.agent_name_en,
-                agent_details: req.session.agent,
-                properties: result
-            });
-        }else {
-            res.render('../views/index',
-            {
-                pageTitle: 'hkproperty',
-                title:'Selling',
-                properties: result
-            });
+            ret.agent = req.session.agent_name_en;
+            ret.agent_details = req.session.agent;
         }
+        res.render('../views/index', ret);
     });
 });
+app.get('/selling/page/:page', function(req,res){
+    var page = req.params.page;
+    var offset = 0;
+    page = page -1;
+    if(page < 0){
+        offset = 0;
+    }else {
+        offset = page * 10;
+    }
+    var parmise = new Promise(function(resolve,reject){
+        mp.select_count_selling_property(function(result){
+            var ret = {total: result};
+            resolve(ret);
+        });
+    });
+    parmise.then(function(result){
+        return new Promise(function(resolve, reject){
+            mp.select_selling_property(offset, function(property_data){
+                result.property= property_data;
+                resolve(result);
+            });
+        });
+    }).then(function(result){
+        var ret = {
+            maxpage: Math.ceil(result.total/10),
+            pageTitle: 'hkproperty',
+            title: 'Selling',
+            properties: result.property
+        };
+        if(req.session.is_login){
+            ret.agent = req.session.agent_name_en;
+            ret.agent_details = req.session.agent;
+        }
+        res.render('../views/index', ret);
+    });
+});
+
 app.get('/rent', function(req,res){
-    mp.select_rent_property(function(result){
+    var promise = new Promise(function(resolve, reject){
+        mp.select_count_rent_property(function(result){
+            var ret = {total: result};
+            resolve(ret);
+        });
+    });
+    promise.then(function(result){
+        return new Promise(function(resolve, reject){
+            mp.select_rent_property(0, function(property_data){
+                result.property = property_data;
+                resolve(result);
+            });
+        });
+    }).then(function(result){
+        var ret = {
+            maxpage: Math.ceil(result.total/10),
+            pageTitle: 'hkproperty',
+            title: 'rent',
+            properties: result.property
+        };
+        if(req.session.is_login){
+            ret.agent = req.session.agent.agent_name_en;
+            ret.agent_details= req.session.agent;
+        }
+        res.render('../views/index', ret);
+    });
+});
+
+app.get('/rent/page/:page', function(req,res){
+    var page = req.params.page;
+    var offset = 0;
+    // console.log(page);
+    page = page -1;
+    if(page < 0){
+        offset = 0;
+    }else {
+        offset = page * 10;
+    }
+    mp.select_rent_property(offset,function(result){
         if(req.session.is_login){
             res.render('../views/index',
             {
@@ -93,8 +175,6 @@ app.get('/property/details/:ref_no', function(req,res){
         return new Promise(function(resolve, reject){
             var id = result.id;
             mp.select_property_full_details_by_property_id(id, function(result_property){
-                // console.log(result[0].id);
-                // console.log(result_property);
                 result.property = result_property[0];
                 resolve(result);
             });

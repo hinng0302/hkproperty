@@ -20,15 +20,31 @@ function select_property_by_id(id, cb) {
 	});
 }
 
-function select_selling_property(cb){
-	// select * from property where selling_price is not null;
-	knex('property').whereNotNull('selling_price').then(function(result){
+function select_selling_property(offset,cb){
+	// select * from property where status ='enable' and selling_price is not null limit 10 offset {offset};
+	knex('property').where('status', 'enable').whereNotNull('selling_price').limit(10).offset(offset).orderBy('created_at', 'desc').then(function(result){
 		cb(result);
 	});
 }
-function select_rent_property(cb){
-	// select * from property where rental_price is not null;
-	knex('property').whereNotNull('rental_price').then(function(result){
+
+function select_count_selling_property(cb){
+	// select count(*) as a from property where status = 'enable' and selling_price is not null;
+	knex('property').count('id as a').where('status', 'enable').whereNotNull('selling_price').then(function(result){
+		// console.log(result);
+		cb(result[0].a)
+	});
+}
+function select_count_rent_property(cb){
+	// select count(*) as a from property where status = 'enable' and rental_price is not null;
+	knex('property').count('id as a').where('status', 'enable').whereNotNull('rental_price').then(function(result){
+		// console.log(result);
+		cb(result[0].a)
+	});
+}
+
+function select_rent_property(offset,cb){
+	// select * from property where status ='enable' and rental_price is not null limit 10 offset {offset};
+	knex('property').where('status', 'enable').whereNotNull('rental_price').limit(10).offset(offset).orderBy('created_at', 'desc').then(function(result){
 		cb(result);
 	});
 }
@@ -96,6 +112,8 @@ function delete_property(id, cb){
 module.exports = {
 	select_property_by_id: select_property_by_id,
 	select_selling_property: select_selling_property,
+	select_count_selling_property: select_count_selling_property,
+	select_count_rent_property: select_count_rent_property,
 	select_rent_property: select_rent_property,
 	select_random_property: select_random_property,
 	select_property_by_ref_no: select_property_by_ref_no,

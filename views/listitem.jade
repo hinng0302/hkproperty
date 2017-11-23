@@ -30,3 +30,11 @@ script.
                                             - if(property.rental_price != null)
                                                 li.property_details='租價: $'+property.rental_price
                                             button.btn.btn-primary(onclick="btn_url('"+property.ref_no+"')") View Details
+.row
+    .container
+        .col-md-7.offset-md-5.col-xs-12
+            span Page: 
+            - for (var i = 1; i <=maxpage; i++) {
+                a(href="/webapp/"+title+"/page/"+i)
+                    span(onclick="")=i
+            - }
