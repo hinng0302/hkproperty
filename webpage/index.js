@@ -9,8 +9,6 @@ var path = require('path');
 app = express.Router();
 
 app.route('/').all(function(req, res, next){
-    console.log(req.method);
-    console.log(req.session);
     next();
 }).get(function(req, res){
     mp.select_random_property(function(result){
@@ -35,6 +33,24 @@ app.route('/').all(function(req, res, next){
 }).post(function(req, res){
     res.send("not implemented");
 });
+app.get('/agent', function(req, res){
+    var agent = require('../module/module_agent');
+    agent.select_agent(function(result){
+        var ret = {
+            pageTitle: 'hkproperty',
+            title: 'Agent',
+            agents: result
+        };
+        if(req.session.is_login == 1){
+            ret.agent = req.session.agent.agent_name_en;
+            ret.agent_details = req.session.agent;
+        }
+        // console.log(ret);
+        console.log(req.session);
+        console.log(ret.agent);
+        res.render('../views/agent_listing', ret);
+    });
+});
 
 app.get('/selling', function(req,res){
     var parmise = new Promise(function(resolve,reject){
@@ -58,7 +74,9 @@ app.get('/selling', function(req,res){
             properties: result.property
         };
         if(req.session.is_login){
-            ret.agent = req.session.agent_name_en;
+            // console.log(req.session.agent.agent_name_en);
+            ret.agent = req.session.agent.agent_name_en;
+            // console.log(req.session.agent);
             ret.agent_details = req.session.agent;
         }
         res.render('../views/index', ret);
@@ -93,10 +111,11 @@ app.get('/selling/page/:page', function(req,res){
             title: 'Selling',
             properties: result.property
         };
-        if(req.session.is_login){
+        if(req.session.is_login == 1){
             ret.agent = req.session.agent_name_en;
             ret.agent_details = req.session.agent;
         }
+        console.log("restt: "+req.session.is_login);
         res.render('../views/index', ret);
     });
 });
@@ -122,10 +141,13 @@ app.get('/rent', function(req,res){
             title: 'rent',
             properties: result.property
         };
-        if(req.session.is_login){
-            ret.agent = req.session.agent.agent_name_en;
-            ret.agent_details= req.session.agent;
+        if(req.session){
+            if(req.session.is_login){
+                ret.agent = req.session.agent.agent_name_en;
+                ret.agent_details= req.session.agent;
+            }
         }
+        
         res.render('../views/index', ret);
     });
 });
