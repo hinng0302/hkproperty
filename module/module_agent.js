@@ -18,7 +18,11 @@ function select_agent_by_id(id, cb){
 		cb(result);
 	});
 }
-
+function select_count_agent(cb){
+	knex('agent').count('id as a').where('status', 'enable').then(function(result){
+		cb(result[0].a);
+	});
+}
 function select_agent(cb){
 		 // select * from agent
 		 // where 
@@ -55,6 +59,7 @@ function delete_agent(id, cb){
 }
 module.exports = {
 	select_agent_by_id: select_agent_by_id,
+	select_count_agent: select_count_agent,
 	select_agent: select_agent,
 	create_agent: create_agent,
 	update_agent: update_agent,

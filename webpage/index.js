@@ -34,20 +34,32 @@ app.route('/').all(function(req, res, next){
     res.send("not implemented");
 });
 app.get('/agent', function(req, res){
+    var ret = {};
     var agent = require('../module/module_agent');
-    agent.select_agent(function(result){
-        var ret = {
-            pageTitle: 'hkproperty',
-            title: 'Agent',
-            agents: result
-        };
+    var promise = new Promise(function(resolve, reject){
+        agent.select_count_agent(function(count){
+            ret = {
+                pageTitle: 'hkproperty',
+                title: 'Agent',
+                count: count
+            }
+            resolve(ret);
+        });
+    });
+    promise.then(function(result){
+        return new Promise(function(resolve, reject){
+            agent.select_agent(function(agents){
+                console.log(result);
+                result.agents= agents;
+                resolve(result);
+            });
+        });
+    }).then(function(result){
+        console.log(ret);
         if(req.session.is_login == 1){
             ret.agent = req.session.agent.agent_name_en;
             ret.agent_details = req.session.agent;
         }
-        // console.log(ret);
-        console.log(req.session);
-        console.log(ret.agent);
         res.render('../views/agent_listing', ret);
     });
 });
@@ -74,9 +86,7 @@ app.get('/selling', function(req,res){
             properties: result.property
         };
         if(req.session.is_login){
-            // console.log(req.session.agent.agent_name_en);
             ret.agent = req.session.agent.agent_name_en;
-            // console.log(req.session.agent);
             ret.agent_details = req.session.agent;
         }
         res.render('../views/index', ret);
