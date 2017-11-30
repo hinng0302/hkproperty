@@ -1,0 +1,23 @@
+.row
+    .col-md-8
+        .row
+            .col-md-6
+                img(src="#{agent_details.profile_pic}" style="width:100%;")
+            .col-md-6
+                .module_header
+                    ul.property_list_details
+                        li.property_details
+                            .col-md-12.col-xs-12 Agent Name(EN):
+                            .col-md-12.col-xs-12=agent_details.agent_name_en
+                        li.property_details
+                            .col-md-12.col-xs-12 Agent Name(ZH):
+                            .col-md-12.col-xs-12=agent_details.agent_name_zh
+                        li.property_details
+                            .col-md-12.col-xs-12 Agent Register Number:
+                            .col-md-12.col-xs-12=agent_details.agent_reg_no
+                        li.property_details
+                            .col-md-12.col-xs-12 Content Number: 
+                            .col-md-12.col-xs-12=agent_details.agent_phone
+                        li.property_details
+                            .col-md-12.col-xs-12 Content E-mail: 
+                            .col-md-12.col-xs-12=agent_details.agent_email

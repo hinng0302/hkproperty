@@ -1,11 +1,20 @@
+script.
+    function view_agent_details(reg_no){
+        //- alert(reg_no);
+        window.location.assign("/webapp/agent/details/"+reg_no);
+    }
 .row
     .col-lg-12.col-md-12.col-xs-12
         .property
             .col-md-12.col-xs-12
-                each agent in agents
-                    .container
-                        ul
-                            li="Agent Name: "+agent.agent_name_zh
-                            li="Agent Name EN: "+agent.agent_name_en
-                            li="Agent Phone: "+agent.agent_phone
-                            li="Agent register number: "+agent.agent_reg_no
+                .container
+                    .row
+                        each agent in agents
+                            .col-md-6
+                                ul(style="list-style-type:none;")
+                                    li="Agent Name (ZH): "+agent.agent_name_zh
+                                    li="Agent Name (EN): "+agent.agent_name_en
+                                    li="Content Number: "+agent.agent_phone
+                                    li="Content E-mail: "+agent.agent_email
+                                    li="Agent register number: "+agent.agent_reg_no
+                                    button.btn-primary.btn(onclick="view_agent_details(\"#{agent.agent_reg_no}\")") View Details

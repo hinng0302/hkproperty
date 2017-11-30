@@ -34,9 +34,10 @@ db_agent.get('/logout', function(req, res){
 db_agent.post('/login',function(req, res) {
     var login=req.body.username;
     var pwd =req.body.password;
-    // console.log(login,pwd);
+    console.log(login,pwd);
     agent_password.select_agent_password(login,pwd, function(result){
         var sess = req.session;
+        // console.log(result);
         if(result.length > 0){
             sess.is_login = 1;
             sess.agent = result[0];

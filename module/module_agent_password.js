@@ -18,8 +18,7 @@ const knex = require('knex')({
 //const fields = { id,login,agent_id,agent_password };
 
 function select_agent_password(login, agent_password, cb){
-	// select * from agent_password where agent_id = id and agent_password = md5('')
-	// console.log("md5",md5(agent_password));
+	// select * from agent_password where login = id and agent_password = md5('agent_password')
 	 knex('agent_password').select('agent_id').where(
 		{
 			login: login, 

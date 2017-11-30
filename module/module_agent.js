@@ -23,6 +23,11 @@ function select_count_agent(cb){
 		cb(result[0].a);
 	});
 }
+function select_agent_by_reg_no(agent_reg_no, cb){
+	knex('agent').where({agent_reg_no, agent_reg_no}).then(function(result){
+		cb(result[0].id);
+	});
+}
 function select_agent(cb){
 		 // select * from agent
 		 // where 
@@ -60,6 +65,7 @@ function delete_agent(id, cb){
 module.exports = {
 	select_agent_by_id: select_agent_by_id,
 	select_count_agent: select_count_agent,
+	select_agent_by_reg_no: select_agent_by_reg_no,
 	select_agent: select_agent,
 	create_agent: create_agent,
 	update_agent: update_agent,

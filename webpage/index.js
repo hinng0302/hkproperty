@@ -64,6 +64,38 @@ app.get('/agent', function(req, res){
     });
 });
 
+
+app.get('/agent/details/:reg_no', function(req, res){
+    var reg_no = req.params.reg_no;
+    var ret = {};
+    var agent = require('../module/module_agent');
+    var parmise = new Promise(function(resolve, reject){
+        agent.select_agent_by_reg_no(reg_no, function(id){
+            resolve(id);
+        });
+    });
+    parmise.then(function(id){
+        return new Promise(function (resolve, reject){
+            // select agent by id
+            agent.select_agent_by_id(id, function(result){
+                resolve(result);
+            });
+        })
+    }).then(function(result){
+        ret = {
+            title: 'Agent Details',
+            pageTitle: 'Agent Details',
+            agent_details: result[0]
+        }
+        if(req.session.is_login){
+            ret.agent = req.session.agent.agent_name_en;
+            ret.agent_details = req.session.agent;
+        }
+        console.log(ret);
+        res.render('../views/agent_page', ret)
+    });
+});
+
 app.get('/selling', function(req,res){
     var parmise = new Promise(function(resolve,reject){
         mp.select_count_selling_property(function(result){
@@ -165,33 +197,64 @@ app.get('/rent', function(req,res){
 app.get('/rent/page/:page', function(req,res){
     var page = req.params.page;
     var offset = 0;
-    // console.log(page);
     page = page -1;
     if(page < 0){
         offset = 0;
     }else {
         offset = page * 10;
     }
-    mp.select_rent_property(offset,function(result){
-        if(req.session.is_login){
-            res.render('../views/index',
-            {
-                pageTitle: 'hkproperty',
-                title:'Rental',
-                agent: req.session.agent.agent_name_en,
-                agent_details: req.session.agent,
-                properties: result
-            });
-        }else {
-            res.render('../views/index',
-            {
-                pageTitle: 'hkproperty',
-                title:'Rental',
-                properties: result
-            });
-        }
-        
+    console.log(page);
+    var promise = new Promise(function(resolve, reject){
+        mp.select_count_rent_property(function(result){
+            var ret = {total: result};
+            resolve(ret);
+        });
     });
+    promise.then(function(result){
+        console.log('result',result);
+        return new Promise(function(resolve, reject){
+            mp.select_rent_property(offset, function(property_data){
+                // console.log(property_data);
+                result.property= property_data;
+                resolve(result);
+            });
+        });
+    }).then(function(result){
+        console.log(result.property);
+        var ret = {
+            maxpage: Math.ceil(result.total/10),
+            pageTitle: 'hkproperty',
+            title: 'rent',
+            properties: result.property
+        };
+        if(req.session.is_login == 1){
+            ret.agent = req.session.agent_name_en;
+            ret.agent_details = req.session.agent;
+        }
+        console.log("restt: "+req.session.is_login);
+        res.render('../views/index', ret);
+    });
+
+    // mp.select_rent_property(offset,function(result){
+    //     if(req.session.is_login){
+    //         res.render('../views/index',
+    //         {
+    //             pageTitle: 'hkproperty',
+    //             title:'Rental',
+    //             agent: req.session.agent.agent_name_en,
+    //             agent_details: req.session.agent,
+    //             properties: result
+    //         });
+    //     }else {
+    //         res.render('../views/index',
+    //         {
+    //             pageTitle: 'hkproperty',
+    //             title:'Rental',
+    //             properties: result
+    //         });
+    //     }
+        
+    // });
 });
 app.get('/property/details/:ref_no', function(req,res){
     var promise = new Promise(function (resolve,reject){
