@@ -12,23 +12,16 @@ app.route('/').all(function(req, res, next){
     next();
 }).get(function(req, res){
     mp.select_random_property(function(result){
-        if(req.session.is_login) {
-            res.render('../views/index',
-            {
-                pageTitle: 'hkproperty',
-                agent: req.session.agent.agent_name_en,
-                agent_details: req.session.agent,
-                title:'Featured Property',
-                properties: result
-            });
-        } else {
-            res.render('../views/index',
-            {
-                pageTitle: 'hkproperty',
-                title:'Featured Property',
-                properties: result
-            });
+        var ret = {
+            pageTitle: 'hkproperty',
+            title:'Featured Property',
+            properties: result
         }
+        if(req.session.is_login) {
+            ret.agent = req.session.agent.agent_name_en;
+            ret.agent_details = req.session.agent;
+        }
+        res.render('../views/index', ret);
     });
 }).post(function(req, res){
     res.send("not implemented");
@@ -49,13 +42,13 @@ app.get('/agent', function(req, res){
     promise.then(function(result){
         return new Promise(function(resolve, reject){
             agent.select_agent(function(agents){
-                console.log(result);
+                
                 result.agents= agents;
                 resolve(result);
             });
         });
     }).then(function(result){
-        console.log(ret);
+        
         if(req.session.is_login == 1){
             ret.agent = req.session.agent.agent_name_en;
             ret.agent_details = req.session.agent;
@@ -91,7 +84,7 @@ app.get('/agent/details/:reg_no', function(req, res){
             ret.agent = req.session.agent.agent_name_en;
             ret.agent_details = req.session.agent;
         }
-        console.log(ret);
+        
         res.render('../views/agent_page', ret)
     });
 });
@@ -157,7 +150,7 @@ app.get('/selling/page/:page', function(req,res){
             ret.agent = req.session.agent_name_en;
             ret.agent_details = req.session.agent;
         }
-        console.log("restt: "+req.session.is_login);
+        
         res.render('../views/index', ret);
     });
 });
@@ -203,7 +196,7 @@ app.get('/rent/page/:page', function(req,res){
     }else {
         offset = page * 10;
     }
-    console.log(page);
+    
     var promise = new Promise(function(resolve, reject){
         mp.select_count_rent_property(function(result){
             var ret = {total: result};
@@ -211,7 +204,6 @@ app.get('/rent/page/:page', function(req,res){
         });
     });
     promise.then(function(result){
-        console.log('result',result);
         return new Promise(function(resolve, reject){
             mp.select_rent_property(offset, function(property_data){
                 result.property= property_data;
@@ -219,7 +211,7 @@ app.get('/rent/page/:page', function(req,res){
             });
         });
     }).then(function(result){
-        console.log(result.property);
+        
         var ret = {
             maxpage: Math.ceil(result.total/10),
             pageTitle: 'hkproperty',
@@ -230,7 +222,7 @@ app.get('/rent/page/:page', function(req,res){
             ret.agent = req.session.agent_name_en;
             ret.agent_details = req.session.agent;
         }
-        console.log("restt: "+req.session.is_login);
+        
         res.render('../views/index', ret);
     });
 });
@@ -253,19 +245,17 @@ app.get('/property/details/:ref_no', function(req,res){
             });
         });
     }).then(function(result){
-        console.log("select property_owner: ");
-        console.log(result);
+        
         return new Promise(function(resolve, reject){
             var prop_owner =require("../module/module_property_owner_relation");
             prop_owner.select_property_owner_relation_by_property_id(result.id, function(property_owner){
-                console.log(property_owner);
+                
                 result.owners = property_owner;
                 resolve(result);
             });
         });
     }).then(function(result){
-        console.log("result:");
-        console.log(result);
+        
         var ret = {
             pageTitle: 'hkproperty: ' +result.property.estate_name_en,
             title: "( Ref:"+result.property.ref_no+") "+result.property.estate_name_en,
@@ -283,7 +273,7 @@ app.get('/property/details/:ref_no', function(req,res){
 app.get('/branch', function(req, res){
     var branch_module = require('../module/module_branch');
     branch_module.select_branch(function(result){
-        console.log(result);
+        
         var ret = {
             pageTitle: 'hkproperty: branch',
             title: "Branch",
