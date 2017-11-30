@@ -1,0 +1,17 @@
+.container
+    each branch in branches
+        .row
+            .col-md-4.col-xs-12
+                img(src="#{branch.default_pic}" style="width:100%;")
+            .col-md-6.col-xs-12
+                span Branch info：
+                ul.property_list_details
+                    li.property_details
+                        .col-md-12.col-xs-12 Shop Name:
+                        .col-md-12.col-xs-12=branch.branch_name
+                    li.property_details
+                        .col-md-12.col-xs-12 Location:
+                        .col-md-12.col-xs-12=branch.location
+                    li.property_details
+                        .col-md-12.col-xs-12 Content Number:
+                        .col-md-12.col-xs-12=branch.phone

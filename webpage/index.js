@@ -286,4 +286,17 @@ app.get('/property/details/:ref_no', function(req,res){
     });
 });
 
+app.get('/branch', function(req, res){
+    var branch_module = require('../module/module_branch');
+    branch_module.select_branch(function(result){
+        console.log(result);
+        var ret = {
+            pageTitle: 'hkproperty: branch',
+            title: "Branch",
+            branches: result
+        }
+        res.render('branch_listing', ret);
+    });
+});
+
 module.exports = app;
