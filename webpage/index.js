@@ -266,23 +266,17 @@ app.get('/property/details/:ref_no', function(req,res){
     }).then(function(result){
         console.log("result:");
         console.log(result);
-        if(req.session.is_login){
-            res.render('../views/property_details', {
-                pageTitle: 'hkproperty: ' +result.property.estate_name_en,
-                title: "( Ref:"+result.property.ref_no+") "+result.property.estate_name_en,
-                agent: req.session.agent.agent_name_en,
-                agent_details: req.session.agent,
-                properties: result.property,
-                owners: result.owners
-            });
-        }else {
-            res.render('../views/property_details', {
-                pageTitle: 'hkproperty: ' +result.property.estate_name_en,
-                title: "( Ref:"+result.property.ref_no+") "+result.property.estate_name_en,
-                properties: result.property,
-                owners: result.owners
-            });
+        var ret = {
+            pageTitle: 'hkproperty: ' +result.property.estate_name_en,
+            title: "( Ref:"+result.property.ref_no+") "+result.property.estate_name_en,
+            properties: result.property,
+            owners: result.owners
         }
+        if(req.session.is_login){
+            ret.agent = req.session.agent.agent_name_en;
+            ret.agent_details = req.session.agent;
+        }
+        res.render('../views/property_details', ret)
     });
 });
 
