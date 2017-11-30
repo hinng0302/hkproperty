@@ -110,6 +110,13 @@ html(lang="en")
             li.current 
               a(href="/webapp/branch")
                 span.navtitle Branch
+            if(agent != null)
+              li.current
+                a(href="/webapp/NewProperty")
+                  span.navtitle New Property
+              li.current
+                a(href="/webapp/Customer")
+                  span.navtitle Customer
             li.current 
               a(href="/webapp/agent")
                 span.navtitle Agent

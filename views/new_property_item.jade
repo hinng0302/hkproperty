@@ -1,0 +1,138 @@
+br
+.container
+    form(action="/webapp/newproperty", method="post", enctype="multipart/form-data")
+        .row
+            .col-md-3.col-xs-12
+                h4 Estate Name:
+            .col-md-3.col-xs-12
+                input(type="text" name="extate_name" placeholder="" required)
+            .col-md-3.col-xs-12
+                h4 Estate Name(EN):
+            .col-md-3.col-xs-12
+                input(type="text" name="extate_name_en" required)
+        .row
+            .col-md-3.col-xs-12
+                h4 Block Number:
+            .col-md-3.col-xs-12
+                input(name="block_number" type="number" required)
+            .col-md-3.col-xs-12
+                h4 Floor Number:
+            .col-md-3.col-xs-12
+                input(name="floor_number" type="number" required)
+        .row
+            .col-md-3.col-xs-12
+                h4 Car Park:
+            .col-md-3.col-xs-12
+                input(name="car_park" type="number" required)
+            .col-md-3.col-xs-12
+                h4 Flat number:
+            .col-md-3.col-xs-12
+                input(name="flat_number" type="number" required)
+        .row
+            .col-md-3.col-xs-12
+                h4 Number of Room:
+            .col-md-3.col-xs-12
+                input(name="num_room" type="number" required)
+            .col-md-3.col-xs-12
+                h4 Number of Living Room:
+            .col-md-3.col-xs-12
+                input(name="num_livingrm" type="number" required)
+        br
+        .row
+            .col-md-2.col-xs-12
+                h4 District
+            .col-md-10.col-xs-12
+                select(name="district"  required)
+                    each district in districts
+                        option(value="#{district.id}")=district.name_en+" "+district.name_zh
+        br
+        .row
+            .col-md-3.col-xs-12
+                h4 Reference num:
+            .col-md-6.col-xs-12
+                input(name='ref_no')
+            
+        .row
+            .col-md-3.col-xs-12
+                h4 Gross Building Area
+            .col-md-3.col-xs-12
+                input(name='gross_building_area')
+            .col-md-3.col-xs-12
+                h4 Practical Building Area
+            .col-md-3.col-xs-12
+                input(name='practical_building_area')
+        .row
+            .col-md-3.col-xs-12
+                h4 Sell Type:
+            .col-md-3.col-xs-12
+                input(type="radio", name="issell", value=1, checked)
+                span Sell
+            .col-md-3.col-xs-12
+                input(type="radio", name="issell", value=0)
+                span Rental
+        .row
+            .col-md-3.col-xs-12
+                h4 Price:
+            .col-md-3.col-xs-12
+                input(type="number" name='selling_price')
+        br
+        .row
+            .col-md-12.col-xs-12 
+                h4 Map
+            .col-md-12.col-xs-12
+                script(async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSigdFn0QZV4cylh-e5oCRXoJI9YWQcEE&callback=initMap")
+                #map
+                    script.
+                        var map;
+                        var lat = 22.27827353145788;
+                        var lng = 114.17229392216541;
+                        function initMap() {
+                            map = new google.maps.Map(document.getElementById('map'), {
+                                zoom: 11,
+                                center: new google.maps.LatLng(lat,lng),
+                                mapTypeId: 'terrain'
+                            });
+                            var latLng = new google.maps.LatLng(lat,lng);
+                            var marker = new google.maps.Marker({
+                                position: latLng,
+                                map: map
+                            });
+                            function addMarker(location) {
+                                marker = new google.maps.Marker({
+                                    position: location,
+                                    map: map
+                                })
+                            }
+                            google.maps.event.addListener(map, 'click', function(event) {
+                                marker.setMap(null);
+                                addMarker(event.latLng);
+                                $('#lat').val(event.latLng.lat());
+                                $('#lng').val(event.latLng.lng());
+                            });
+                        }
+        br
+        .row
+            .col-md-3.col-xs-12 
+                h4 lat 
+            .col-md-3.col-xs-12
+                input#lat(name="lat")
+            .col-md-3.col-xs-12
+                h4 lng
+            .col-md-3.col-xs-12
+                input#lng(name="lng")
+        br
+        .row
+            .col-md-12.col-xs-12
+                h4 Description
+            .col-md-12.col-xs-12
+                textarea(name="description" style="width: 100%")
+        br
+        .row
+            .col-md-12.col-xs-12
+                h4 Cover Pic
+            .col-md-12.col-xs-12
+                input(type='file' name="image_page")
+        br
+        button.btn.btn-primary(type="submit") Submit
+        br
+        br

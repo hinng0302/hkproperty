@@ -279,8 +279,37 @@ app.get('/branch', function(req, res){
             title: "Branch",
             branches: result
         }
+        if(req.session.is_login){
+            ret.agent = req.session.agent.agent_name_en;
+            ret.agent_details = req.session.agent;
+        }
         res.render('branch_listing', ret);
     });
+});
+
+
+app.get('/NewProperty', function(req, res){
+    if(!req.session || !req.session.is_login){
+        res.redirect('/webapp');
+    }
+    var ret = {
+        title: 'New Property',
+        pageTitle: 'Add New Property'
+    }
+    if(req.session.is_login){
+        ret.agent = req.session.agent.agent_name_en;
+        ret.agent_details = req.session.agent;
+    }
+    var district = require('../module/module_district');
+    var promise = new Promise(function(resolve, reject){
+        district.selectall(function(result){
+            resolve(result);
+        });
+    });
+    promise.then(function(result){
+        ret.districts = result;
+        res.render('new_property', ret);
+    })
 });
 
 module.exports = app;
