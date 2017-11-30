@@ -214,7 +214,6 @@ app.get('/rent/page/:page', function(req,res){
         console.log('result',result);
         return new Promise(function(resolve, reject){
             mp.select_rent_property(offset, function(property_data){
-                // console.log(property_data);
                 result.property= property_data;
                 resolve(result);
             });
@@ -234,27 +233,6 @@ app.get('/rent/page/:page', function(req,res){
         console.log("restt: "+req.session.is_login);
         res.render('../views/index', ret);
     });
-
-    // mp.select_rent_property(offset,function(result){
-    //     if(req.session.is_login){
-    //         res.render('../views/index',
-    //         {
-    //             pageTitle: 'hkproperty',
-    //             title:'Rental',
-    //             agent: req.session.agent.agent_name_en,
-    //             agent_details: req.session.agent,
-    //             properties: result
-    //         });
-    //     }else {
-    //         res.render('../views/index',
-    //         {
-    //             pageTitle: 'hkproperty',
-    //             title:'Rental',
-    //             properties: result
-    //         });
-    //     }
-        
-    // });
 });
 app.get('/property/details/:ref_no', function(req,res){
     var promise = new Promise(function (resolve,reject){
