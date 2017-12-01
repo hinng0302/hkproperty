@@ -2,12 +2,16 @@
 const mp = require("../module/module_property");
 const express = require("express");
 const config = require("config");
+const bodyParser = require('body-parser');
 const session = require('express-session');
 var jade = require('jade');
 var fs = require('fs');
 var path = require('path');
 app = express.Router();
 
+app.use( bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
+// app.use(express.bodyParser());
 app.route('/').all(function(req, res, next){
     next();
 }).get(function(req, res){
@@ -287,11 +291,12 @@ app.get('/branch', function(req, res){
     });
 });
 
-
+// app.route('/newproperty', require('./property_add'));
+// app.route('/NewProperty', require('./property_add'));
 app.get('/NewProperty', function(req, res){
-    if(!req.session || !req.session.is_login){
-        res.redirect('/webapp');
-    }
+    // if(!req.session || !req.session.is_login){
+    //     res.redirect('/webapp');
+    // }
     var ret = {
         title: 'New Property',
         pageTitle: 'Add New Property'
@@ -309,7 +314,19 @@ app.get('/NewProperty', function(req, res){
     promise.then(function(result){
         ret.districts = result;
         res.render('new_property', ret);
-    })
+    });
+});
+
+
+
+app.post('/newproperty/add', function(req, res){
+    console.log(req.body);
+    console.log(req.param);
+    console.log(req.params);
+    
+    res.status(200).json({ resp: req.query, param: req.params });
+}).get(function(req, res){
+    res.redirect('/webapp');
 });
 
 module.exports = app;

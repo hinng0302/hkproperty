@@ -84,9 +84,7 @@ function select_property_full_details_by_property_id(property_id,cb){
 
 function create_property(data, cb){ 
 		 // insert into property() values(................)
- 	knex('property').insert({
-		//waiting to write 
-	}).then(function(id){
+ 	knex('property').insert(data).then(function(id){
 		cb(id);
 	}).catch(function(err){
 		cb(err)

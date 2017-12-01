@@ -23,6 +23,7 @@
     "body-parser": "^1.18.2",
     "config": "^1.26.2",
     "express": "^4.16.1",
+    "express-fileupload": "^0.3.0",
     "express-session": "^1.15.6",
     "form-data": "^2.3.1",
     "fs": "0.0.1-security",

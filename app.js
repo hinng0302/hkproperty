@@ -4,6 +4,7 @@ const express = require("express");
 const config = require("config");
 const app = express();
 const session = require('express-session');
+
 var jade = require('jade');
 var fs = require('fs');
 var path = require('path');
@@ -45,13 +46,14 @@ app.get('/', function(req,res){
     res.status(200).send('Hello');
 });
 app.use('/agent', require('./restapi/db_agent'));
-// app.use('/knex', require('./restapi/db_knexinit'));
 app.use('/district', require('./restapi/db_district'));
+app.use('/newproperty', require('./restapi/property'));
 app.use('/sn', require('./restapi/db_schoolnetwork'));
 
 app.use('/property', require('./restapi/db_property'));
 
 app.use('/webapp',require('./webpage/index'));
+
 app.use(function(req, res){
     res.status(404).send("404 Not Found!");
 });
