@@ -13,7 +13,7 @@
                                 li.property_details
                                     .col-md-6.col-xs-12
                                         span District
-                                    .col-md-6.col-xs-12
+                                    .col-md-12.col-xs-12
                                         h5=properties.name_en
                                 li.property_details
                                     .col-md-6.col-xs-12
@@ -78,3 +78,7 @@
                 h3 Property Owner(s)
                 .container
                     include owner_list
+            - if(agent != null)
+                .container
+                    .row
+                        button.btn.btn-primary(onclick='window.location.href=\'/webapp/property/details/#{properties.ref_no}/edit\'') Edit Data

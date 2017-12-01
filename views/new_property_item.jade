@@ -167,10 +167,13 @@ br
                 data: formData,
                 processData: false,
                 contentType: false,
+                cache: false,
                 encType: 'multipart/form-data',
                 success: function(data){
-                    console.log(data);
-                    alert(data);
+                    var newLocation = '/webapp/NewProperty/add/'+data.content[0];
+                    window.location.href =newLocation;
                 }
+            }).fail(function(jqXHR, textStatus, error){
+                alert("Error: "+jqXHR.responseJSON.error);
             });
         });

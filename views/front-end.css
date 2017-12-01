@@ -5,6 +5,7 @@
 .property_list_details{
     list-style: none;
     padding:0;
+    width: 100%;
 }
 .navbar {
     padding: 0px;

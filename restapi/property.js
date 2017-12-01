@@ -28,7 +28,6 @@ db_p.post('/add', function(req,res){
          !req.body.lat||
          !req.body.lng||
          !req.body.description ){
-             console.log(req.body);
         res.status(400).json({header: new Date(),error: 'paramamter missing'});
     }else if(!req.files){
         res.status(400).json({header: new Date(),error: 'no files were uploaded'});
@@ -38,7 +37,7 @@ db_p.post('/add', function(req,res){
             console.log(req.body.ref_no);
             module_property.select_property_by_ref_no(req.body.ref_no, function(result){
                 console.log(result);
-                if(result.length != 0 ) reject('Ref. No exists.');
+                if(result.length != 0 ) reject('Ref. no already exists.');
                 resolve(0);
             });
         });
@@ -57,7 +56,7 @@ db_p.post('/add', function(req,res){
         promise.then(function(result){
             return new Promise(function(resolve, reject){
                 var input = req.body;
-                input.image_page = '/images/property'+sample.name;
+                input.image_page = '/images/property/'+sample.name;
                 module_property.create_property(input, function(result){
                     console.log(result);
                     resolve(result);
@@ -69,13 +68,9 @@ db_p.post('/add', function(req,res){
                 content: result
             });
         }).catch(function(err){
-            console.log(err);
+            res.status(400).json({header: new Date(),error:err});
         });
     }
-});
-
-db_p.get('/add/:property_id', function(req,res){
-    
 });
 
 

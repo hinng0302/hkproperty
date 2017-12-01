@@ -236,6 +236,8 @@ app.get('/property/details/:ref_no', function(req,res){
             if(result.length == 0){
                 reject('error, result not found');
             }
+            if(!result[0].id)
+                reject('error, result not found');
             var ret ={id: result[0].id};
             resolve(ret);
         })
@@ -291,8 +293,6 @@ app.get('/branch', function(req, res){
     });
 });
 
-// app.route('/newproperty', require('./property_add'));
-// app.route('/NewProperty', require('./property_add'));
 app.get('/NewProperty', function(req, res){
     // if(!req.session || !req.session.is_login){
     //     res.redirect('/webapp');
@@ -317,16 +317,36 @@ app.get('/NewProperty', function(req, res){
     });
 });
 
+app.get('/newproperty/property_owner/:property_id', function(req, res){
+    // if(!req.session || !req.session.is_login){
+    //     res.redirect('/webapp');
+    // }
+    var id = req.params.property_id;
+    var ret = {};
+    var promise = new Promise(function(resolve, reject){
+        mp.select_property_full_details_by_property_id(id, function(result_property){
+            ret.property = result_property[0];
+            resolve(ret);
+        });
+    });
+    //promise.then(function(result){
+        // mp.select_property_owner_relation_by_property_id()
+    // })
+    promise.then(function(result){
+        var ret = {
+            pageTitle: 'hkproperty: ' +result.property.estate_name_en,
+            title: "( Ref:"+result.property.ref_no+") "+result.property.estate_name_en,
+            properties: result.property,
+            owners: []//result.owners
+        };
+        console.log(ret);
+        res.render('../views/property_details', ret);
+    });
+});
 
-
-app.post('/newproperty/add', function(req, res){
-    console.log(req.body);
-    console.log(req.param);
-    console.log(req.params);
-    
-    res.status(200).json({ resp: req.query, param: req.params });
-}).get(function(req, res){
-    res.redirect('/webapp');
+app.get('/property/details/:ref_no/edit', function(req, res){
+    var ref_no = req.params.ref_no;
+    res.send('asdf');
 });
 
 module.exports = app;

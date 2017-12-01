@@ -73,10 +73,7 @@ function select_property_id_by_ref_no(ref_no, cb){
 }
 
 function select_property_full_details_by_property_id(property_id,cb){
-	knex.select('*').from('property')
-	// .leftJoin('property_owner_relation', 'property.id','property_owner_relation.property_id')
-	// .leftJoin('property_owner', 'property_owner.id', 'property_owner_relation.owner_id')
-	.leftJoin('district', 'district.id', 'property.district')
+	knex.select('*').from('property').leftJoin('district', 'district.id', 'property.district')
 	.where('property.id', property_id).then(function(result){
 		cb(result);
 	});
