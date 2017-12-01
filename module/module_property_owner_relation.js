@@ -25,16 +25,14 @@ function select_property_owner_relation_by_property_id(property_id,cb){
 	// select * from property_owner_relation
 	knex('property_owner_relation')
 	.leftJoin('property_owner', 'property_owner_relation.owner_id', 'property_owner.id')
-	.where('property_id', property_id)
+	.where('property_owner_relation.property_id', property_id)
 	.where('status','enable').then(function(result){
    		cb(result);
 	});
 }
 function create_property_owner_relation(data, cb){ 
 		 // insert into property_owner_relation() values(................)
- 	knex('property_owner_relation').insert({
-		//waiting to write 
-	}).then(function(id){
+ 	knex('property_owner_relation').insert(data).then(function(id){
 		cb(id);
 	}).catch(function(err){
 		cb(err)

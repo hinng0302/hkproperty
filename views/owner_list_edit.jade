@@ -1,0 +1,46 @@
+each owner in owners
+    .row
+        .col-md-12.col-xs-12.property_details.blackcolor
+            .container
+                .row
+                    span.col-xs-12 Property Owner:
+                .row
+                    span.col-xs-12=owner.owner_name
+                .row
+                    span.col-xs-12 Owner Content Number:
+                .row
+                    span.col-xs-12=owner.owner_phone_number
+- if(agent != null)
+    .row
+        .col-md12.col-xs-12
+            .container
+                span Property Owner:
+                br
+                input(name="owner_name" type="text")
+                br
+                span Content Number:
+                input(name="owner_phone_number" type="text")
+                br
+                button#btnsave.btn.btn-primary Save
+                script.
+                    $('#btnsave').click(function(){
+                        var formData = new FormData();
+                        formData.append('owner_name', $('input[name=owner_name]').val());
+                        formData.append('owner_phone_number', $('input[name=owner_phone_number]').val());
+                        formData.append('ref_no', "#{properties.ref_no}");
+                        console.log(formData);
+                        $.ajax({
+                            url: '/property_owner/create',
+                            type: 'post',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            success: function(data){
+                                if(data.content == true){
+                                    location.reload();
+                                }
+                            }
+                        });
+                    });
+                    

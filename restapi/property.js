@@ -18,6 +18,7 @@ db_p.post('/add', function(req,res){
          !req.body.estate_name_en ||
          !req.body.block_number ||
          !req.body.flat_number ||
+         !req.body.floor_number ||
          !req.body.gross_building_area ||
          !req.body.practical_building_area || 
          !req.body.num_room || 

@@ -13,7 +13,7 @@ const knex = require('knex')({
 	connection: options
 });
 
-const fields = { id,owner_name,owner_phone_number,created_at,modified_at };
+// const fields = { id,owner_name,owner_phone_number,created_at,modified_at };
 
 function select_property_owner(cb){
 		 // select * from property_owner
@@ -23,9 +23,7 @@ function select_property_owner(cb){
 }
 function create_property_owner(data, cb){ 
 		 // insert into property_owner() values(................)
- 	knex('property_owner').insert({
-		//waiting to write 
-	}).then(function(id){
+ 	knex('property_owner').insert(data).then(function(id){
 		cb(id);
 	}).catch(function(err){
 		cb(err)

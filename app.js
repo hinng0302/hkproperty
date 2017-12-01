@@ -48,10 +48,10 @@ app.get('/', function(req,res){
 app.use('/agent', require('./restapi/db_agent'));
 app.use('/district', require('./restapi/db_district'));
 app.use('/newproperty', require('./restapi/property'));
+app.use('/property_owner', require('./restapi/db_property_owner'));
 app.use('/sn', require('./restapi/db_schoolnetwork'));
 
 app.use('/property', require('./restapi/db_property'));
-
 app.use('/webapp',require('./webpage/index'));
 
 app.use(function(req, res){

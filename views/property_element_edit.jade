@@ -1,0 +1,85 @@
+.row
+    .container
+        .row
+            .col-md-9.col-xs.12 
+                H3 Property Details(Edit)
+                .row
+                    .col-md-6.col-xs-12
+                        .blackcolor(style="height:400px;")
+                            img.property_details_pic(src=properties.image_page)
+                    .col-md-6.col-xs-12
+                        .row
+                            ul.property_list_details
+                                li.property_details
+                                    .col-md-6.col-xs-12
+                                        span District
+                                    .col-md-12.col-xs-12
+                                        h5=properties.name_en
+                                        select(name='district')
+                                            each d in distrcit
+                                                option(value="#{d.id}")=d.name_zh+" "+d.name_en
+                                li.property_details
+                                    .col-md-6.col-xs-12
+                                        span 建築面積(ft')
+                                    .col-md-6.col-xs-12
+                                        input(name="practical_building_area" type='number' value=properties.practical_building_area)
+                                li.property_details
+                                    .col-md-6.col-xs-12
+                                        span 實用面積(ft')
+                                    .col-md-6.col-xs-12
+                                        input(name="gross_building_area" type="number" value=properties.gross_building_area)
+                                li.property_details
+                                    .col-md-6.col-xs-12
+                                        span 房間
+                                    .col-md-6.col-xs-12
+                                        input(name="num_room" type="number" value=properties.num_room)
+                                li.property_details
+                                    .col-md-6.col-xs-12
+                                        span 客廳
+                                    .col-md-6.col-xs-12
+                                        input(type="number" name="num_livingrm" value=properties.num_livingrm)
+                                li.property_details
+                                    .col-md-12.col-xs-12
+                                        span Description
+                                    .col-md-12.col-xs-12
+                                        textarea(name="description")
+                                            | #{properties.description}
+                .row
+                    .container.gary_background
+                        .col-md-12.col.xs-12
+                            if(properties.selling_price == null)
+                                .float_left 租價
+                                .float_left.price="$"+properties.rental_price
+                            else 
+                                .float_left 賣價
+                                .float_left.price="$"+properties.selling_price
+                .row
+                    .col-md-12.col-xs-12
+                        h3.title Map
+                        script(async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSigdFn0QZV4cylh-e5oCRXoJI9YWQcEE&callback=initMap")
+
+                        #map
+                            script.
+                                var lat = "#{properties.lat}";
+                                var lng = "#{properties.lng}";
+                                var map;
+                                function initMap(){
+                                    map= new google.maps.Map(document.getElementById('map'), {
+                                        zoom: 17,
+                                        center: new google.maps.LatLng(lat,lng),
+                                        mapTypeId: 'terrain'
+                                    });
+                                    var latLng = new google.maps.LatLng(lat,lng);
+                                    var marker = new google.maps.Marker({
+                                        position: latLng,
+                                        map: map
+                                    });
+                                }
+            .col-md-3.col-xs.12 
+                h3 Property Owner(s)
+                .container
+                    include owner_list_edit
+            - if(agent != null)
+                .container
+                    .row
+                        button.btn.btn-primary(onclick='window.location.href=\'/webapp/property/details/#{properties.ref_no}/edit\'') Edit Data
