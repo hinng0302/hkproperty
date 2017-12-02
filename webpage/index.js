@@ -471,6 +471,10 @@ app.get('/salesreport', function(req, res){
                 
                 if(temp.length == ret.branches.length){
                     console.log(ret);
+                    if(req.session.is_login) {
+                        ret.agent = req.session.agent.agent_name_en;
+                        ret.agent_details = req.session.agent;
+                    }
                     res.render('../views/salereport', ret);
                 }
             });
@@ -501,6 +505,10 @@ app.get('/rentalreport', function(req, res){
                 
                 if(temp.length == ret.branches.length){
                     console.log(ret);
+                    if(req.session.is_login) {
+                        ret.agent = req.session.agent.agent_name_en;
+                        ret.agent_details = req.session.agent;
+                    }
                     res.render('../views/rentreport', ret);
                 }
             });
