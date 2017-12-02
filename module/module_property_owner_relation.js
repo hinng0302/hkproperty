@@ -22,7 +22,8 @@ function select_property_owner_relation(cb){
 	});
 }
 function select_property_owner_relation_by_property_id(property_id,cb){
-	// select * from property_owner_relation
+	// select * from property_owner_relation left join property_owner on property_owner_relation.owner_id = property_owner.id
+	// where status = 'enable' and property_owner_relation.property_id = property_id
 	knex('property_owner_relation')
 	.leftJoin('property_owner', 'property_owner_relation.owner_id', 'property_owner.id')
 	.where('property_owner_relation.property_id', property_id)
