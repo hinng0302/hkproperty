@@ -352,35 +352,43 @@ app.get('/NewProperty', function(req, res){
 });
 
 app.get('/newproperty/property_owner/:property_id', function(req, res){
-    if(!req.session || !req.session.is_login){
-        res.redirect('/webapp');
-    }
+    // if(!req.session || !req.session.is_login){
+    //     res.redirect('/webapp');
+    // }
     var id = req.params.property_id;
     var ret = {};
     var promise = new Promise(function(resolve, reject){
         mp.select_property_full_details_by_property_id(id, function(result_property){
+            console.log(result_property);
             ret.property = result_property[0];
             resolve(ret);
         });
     });
-
     promise.then(function(result){
+        // console.log(result);
         var district = require('../module/module_district');
         return new Promise(function(resolve, reject){
             district.selectall(function(districts){
-                result.districts;
+                // console.log(districts);
+                result.districts = districts;
+                // console.log(result);
                 ret.district = districts;
-                resolve(result);
+                // console.log(ret);
+                resolve(ret);
             });
         }).then(function(result){
             var prop_owner =require("../module/module_property_owner_relation");
-            prop_owner.select_property_owner_relation_by_property_id(req.params.property_id, function(property_owner){
-                result.owners = property_owner;
-                resolve(result);
+            return new Promise(function(resolve, reject){
+                prop_owner.select_property_owner_relation_by_property_id(req.params.property_id, function(property_owner){
+                    result.owners = property_owner;
+                    console.log('fajskhdfklh');
+                    console.log(result);
+                    resolve(result);
+                });
             });
+            
         });
     }).then(function(result){
-        
         var ret = {
             pageTitle: 'hkproperty: ' +result.property.estate_name_en,
             title: "( Ref:"+result.property.ref_no+") "+result.property.estate_name_en,
