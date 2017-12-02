@@ -21,16 +21,25 @@ function select_property_by_id(id, cb) {
 }
 function search_property(estate_name, sale_type, low_range, high_range , cb){
 	if(!estate_name && !low_range &&!high_range){
+		// sale_type = [selling_price || rental_price]
+		// select * from property where [selling_price || rental_price] is not null;
 		knex('property').whereNotNull(sale_type).then(function(result){
 			console.log(result);
 			cb(result);
 		});
 	}else if(!estate_name){
+		// sale_type = [selling_price || rental_price]
+		// select * from property where [selling_price || rental_price] is not null and [selling_price || rental_price] between 
+		// low_range and height_range
 		knex('property').whereNotNull(sale_type).whereBetween(sale_type, [low_range, high_range]).then(function(result){
 			console.log(result);
 			cb(result);
 		});
 	} else {
+		// sale_type = [selling_price || rental_price]
+		// select * from property where estate_name like '%estate_name%' or estate_name_en like '%estate_name%' and
+		// [selling_price || rental_price] is not null and [selling_price || rental_price] between 
+		// low_range and height_range
 		knex('property').whereBetween(sale_type, [low_range, high_range])
 		.where('estate_name', 'like',  '%'+estate_name+'%', )
 		.orWhere('estate_name_en', 'like','%'+estate_name+'%' )
@@ -40,7 +49,6 @@ function search_property(estate_name, sale_type, low_range, high_range , cb){
 			cb(result);
 		});
 	}
-
 }
 function select_selling_property(offset,cb){
 	// select * from property where status ='enable' and selling_price is not null limit 10 offset {offset};
