@@ -171,7 +171,7 @@ br
                 cache: false,
                 encType: 'multipart/form-data',
                 success: function(data){
-                    var newLocation = '/webapp/NewProperty/add/'+data.content[0];
+                    var newLocation = '/webapp/NewProperty/property_owner/'+data.content[0];
                     window.location.href =newLocation;
                 }
             }).fail(function(jqXHR, textStatus, error){
