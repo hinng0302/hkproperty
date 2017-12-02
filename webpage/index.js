@@ -449,71 +449,81 @@ app.post('/searchproperty',function(req, res){
 
 
 app.get('/salesreport', function(req, res){
-    var ret = {
-        pageTitle: 'hkproperty',
-        title: "Sales Report",
-    }
-    var branch = require('../module/module_branch');
-    var promise = new Promise(function(resolve, reject){
-        branch.select_branch(function(result){
-            ret.branches = result;
-            resolve(ret);
-        });
-    });
-    promise.then(function(result){
-        var temp = [];
-        var transection = require('../module/module_transection');
-        ret.branches.forEach(function(element, index) {
-            var temp1 = element;
-            transection.get_salling_report_by_branch_id(element.id, function(selling_report){
-                temp1.selling_report = selling_report;
-                temp.push(temp1);
-                
-                if(temp.length == ret.branches.length){
-                    console.log(ret);
-                    if(req.session.is_login) {
-                        ret.agent = req.session.agent.agent_name_en;
-                        ret.agent_details = req.session.agent;
-                    }
-                    res.render('../views/salereport', ret);
-                }
+    if(!req.session || !req.session.is_login){
+        res.redirect('/webapp');
+    }else {
+        var ret = {
+            pageTitle: 'hkproperty',
+            title: "Sales Report",
+        }
+        var branch = require('../module/module_branch');
+        var promise = new Promise(function(resolve, reject){
+            branch.select_branch(function(result){
+                ret.branches = result;
+                resolve(ret);
             });
-        }, this);
-    });
+        });
+        promise.then(function(result){
+            var temp = [];
+            var transection = require('../module/module_transection');
+            ret.branches.forEach(function(element, index) {
+                var temp1 = element;
+                transection.get_salling_report_by_branch_id(element.id, function(selling_report){
+                    temp1.selling_report = selling_report;
+                    temp.push(temp1);
+                    
+                    if(temp.length == ret.branches.length){
+                        console.log(ret);
+                        if(req.session.is_login) {
+                            ret.agent = req.session.agent.agent_name_en;
+                            ret.agent_details = req.session.agent;
+                        }
+                        res.render('../views/salereport', ret);
+                    }
+                });
+            }, this);
+        });
+    }
+    
 });
 
 app.get('/rentalreport', function(req, res){
-    var ret = {
-        pageTitle: 'hkproperty',
-        title: "Rental Report",
-    }
-    var branch = require('../module/module_branch');
-    var promise = new Promise(function(resolve, reject){
-        branch.select_branch(function(result){
-            ret.branches = result;
-            resolve(ret);
-        });
-    });
-    promise.then(function(result){
-        var temp = [];
-        var transection = require('../module/module_transection');
-        ret.branches.forEach(function(element, index) {
-            var temp1 = element;
-            transection.get_rental_report_by_branch_id(element.id, function(selling_report){
-                temp1.selling_report = selling_report;
-                temp.push(temp1);
-                
-                if(temp.length == ret.branches.length){
-                    console.log(ret);
-                    if(req.session.is_login) {
-                        ret.agent = req.session.agent.agent_name_en;
-                        ret.agent_details = req.session.agent;
-                    }
-                    res.render('../views/rentreport', ret);
-                }
+    if(!req.session || !req.session.is_login){
+        res.redirect('/webapp');
+    }else {
+        var ret = {
+            pageTitle: 'hkproperty',
+            title: "Rental Report",
+        }
+        var branch = require('../module/module_branch');
+        var promise = new Promise(function(resolve, reject){
+            branch.select_branch(function(result){
+                ret.branches = result;
+                resolve(ret);
             });
-        }, this);
-    });
+        });
+        promise.then(function(result){
+            var temp = [];
+            var transection = require('../module/module_transection');
+            ret.branches.forEach(function(element, index) {
+                var temp1 = element;
+                transection.get_rental_report_by_branch_id(element.id, function(selling_report){
+                    temp1.selling_report = selling_report;
+                    temp.push(temp1);
+                    
+                    if(temp.length == ret.branches.length){
+                        console.log(ret);
+                        if(req.session.is_login) {
+                            ret.agent = req.session.agent.agent_name_en;
+                            ret.agent_details = req.session.agent;
+                        }
+                        res.render('../views/rentreport', ret);
+                    }
+                });
+            }, this);
+        });
+    }
+    
 });
 
 module.exports = app;
