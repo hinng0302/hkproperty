@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/hinng0302/hkproperty#readme",
   "dependencies": {
+    "async": "^2.6.0",
     "body-parser": "^1.18.2",
     "config": "^1.26.2",
     "express": "^4.16.1",
@@ -32,6 +33,7 @@
     "md5": "^2.2.1",
     "mv": "^2.1.1",
     "mysql": "^2.15.0",
+    "node-array": "0.0.7",
     "promise": "^8.0.1"
   },
   "devDependencies": {

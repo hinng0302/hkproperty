@@ -1,0 +1,28 @@
+extends header
+block content
+    h3= title
+    .container
+        each branch in branches
+            .container.display_branch
+                .row(style="padding-top:20px;")
+                    .col-md-12.col-xs.12
+                        h3= branch.branch_name
+                .row
+                    .col-md-12.col-xs.12
+                        table(style="width: 100%")
+                            thead
+                            tr: th ref_no
+                                th Agent Name
+                                th Agent Name EN
+                                th Sale Price
+                                th Commission
+                                th Total
+                                th Create Date
+                            each report in branch.selling_report
+                                tr: td=report.ref_no
+                                    td=report.agent_name_zh
+                                    td=report.agent_name_en
+                                    td=report.selling_price
+                                    td=report.commission
+                                    td=report.total
+                                    td=report.created_at

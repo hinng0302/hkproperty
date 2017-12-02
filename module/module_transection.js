@@ -13,7 +13,7 @@ const knex = require('knex')({
 	connection: options
 });
 
-const fields = { id,ref_no,branch_id,agent_id,customer_id,created_at,modified_at };
+// const fields = { id,ref_no,branch_id,agent_id,customer_id,created_at,modified_at };
 
 function select_transection(cb){
 		 // select * from transection
@@ -21,6 +21,37 @@ function select_transection(cb){
 		cb(result);
 	});
 }
+
+function get_salling_report_by_branch_id(branch_id, cb){
+	// SELECT transection.ref_no,  agent.agent_name_zh , agent.agent_name_en,selling_price, commission,
+	// (selling_price * commission) as total, transection.created_at
+	// FROM hkproperties.transection
+	// left join transection_item on transection_item.transection_id = transection.id
+	// left join agent on agent.id = transection.agent_id
+	// where transection.branch_id = {branch_id} and selling_price is not null;
+	knex('transection').select(knex.raw('transection.ref_no,  agent.agent_name_zh , agent.agent_name_en,selling_price, commission, (`selling_price` * `commission`) as `total`, transection.created_at'))
+	.leftJoin('transection_item', 'transection_item.transection_id' , 'transection.id')
+	.leftJoin('agent','agent.id','transection.agent_id')
+	.where('transection.branch_id', branch_id).whereNotNull('selling_price').then(function(result){
+		console.log(result);
+		cb(result);
+	});
+}
+
+function get_rental_report_by_branch_id(branch_id, cb){
+	// SELECT  transection.ref_no,  agent.agent_name_zh , agent.agent_name_en, rental_price as total, transection.created_at
+	// FROM hkproperties.transection
+	// left join transection_item on transection_item.transection_id = transection.id
+	// left join agent on agent.id = transection.agent_id
+	// where transection.branch_id = {branch_id} and rental_price is not null;
+	knex('transection').select(knex.raw('transection.ref_no,  agent.agent_name_zh , agent.agent_name_en,  rental_price, commission, rental_price as total, transection.created_at'))
+	.leftJoin('transection_item', 'transection_item.transection_id' , 'transection.id')
+	.leftJoin('agent','agent.id','transection.agent_id')
+	.where('transection.branch_id', branch_id).whereNotNull('rental_price').then(function(result){
+		cb(result);
+	});
+}
+
 function create_transection(data, cb){ 
 		 // insert into transection() values(................)
  	knex('transection').insert({
@@ -50,6 +81,8 @@ function delete_transection(id, cb){
 }
 module.exports = {
 	select_transection: select_transection,
+	get_salling_report_by_branch_id: get_salling_report_by_branch_id,
+	get_rental_report_by_branch_id: get_rental_report_by_branch_id,
 	create_transection: create_transection,
 	update_transection: update_transection,
 	delete_transection: delete_transection

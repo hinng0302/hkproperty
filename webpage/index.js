@@ -328,9 +328,9 @@ app.get('/branch/:branchcode', function(req, res){
 });
 
 app.get('/NewProperty', function(req, res){
-    // if(!req.session || !req.session.is_login){
-    //     res.redirect('/webapp');
-    // }
+    if(!req.session || !req.session.is_login){
+        res.redirect('/webapp');
+    }
     var ret = {
         title: 'New Property',
         pageTitle: 'Add New Property'
@@ -352,9 +352,9 @@ app.get('/NewProperty', function(req, res){
 });
 
 app.get('/newproperty/property_owner/:property_id', function(req, res){
-    // if(!req.session || !req.session.is_login){
-    //     res.redirect('/webapp');
-    // }
+    if(!req.session || !req.session.is_login){
+        res.redirect('/webapp');
+    }
     var id = req.params.property_id;
     var ret = {};
     var promise = new Promise(function(resolve, reject){
@@ -397,47 +397,115 @@ app.get('/newproperty/property_owner/:property_id', function(req, res){
     });
 });
 app.get('/searchproperty', function(req, res){
-    var ret = {
-        pageTitle: 'hkproperty',
-        title: "Search Property",
-        properties: []
-    };
-    
-    if(req.session.is_login) {
-        ret.agent = req.session.agent.agent_name_en;
-        ret.agent_details = req.session.agent;
+    if(!req.session || !req.session.is_login){
+        res.redirect('/webapp');
+    }else {
+        var ret = {
+            pageTitle: 'hkproperty',
+            title: "Search Property",
+            properties: []
+        };
+        
+        if(req.session.is_login) {
+            ret.agent = req.session.agent.agent_name_en;
+            ret.agent_details = req.session.agent;
+        }
+        console.log(ret);
+        res.render('../views/property_search', ret);
     }
-    console.log(ret);
-    res.render('../views/property_search', ret);
 });
 app.post('/searchproperty',function(req, res){
+    if(!req.session || !req.session.is_login){
+        res.redirect('/webapp');
+    }else {
+        var ret = {
+            pageTitle: 'hkproperty',
+            title: "Search Property",
+            properties: []
+        };
+        console.log(req.body);
+        var estate_name = req.body.estate_name;
+        var sales_type = req.body.salestype;
+        var low_range= req.body.low_range;
+        var high_range=req.body.hight_range;
+        console.log(estate_name);
+        if(!estate_name){
+            console.log('estate_name is null');
+        }
+        var module_property = require('../module/module_property');
+        module_property.search_property(estate_name, sales_type, low_range, high_range,function(cb){
+            if(cb.length > 0){
+                ret.properties = cb;
+            }
+            if(req.session.is_login) {
+                ret.agent = req.session.agent.agent_name_en;
+                ret.agent_details = req.session.agent;
+            }
+            res.render('../views/property_search', ret);
+        });
+    }
+});
+
+
+
+app.get('/salesreport', function(req, res){
     var ret = {
         pageTitle: 'hkproperty',
-        title: "Search Property",
-        properties: []
-    };
-    console.log(req.body);
-    var estate_name = req.body.estate_name;
-    var sales_type = req.body.salestype;
-    var low_range= req.body.low_range;
-    var high_range=req.body.hight_range;
-    console.log(estate_name);
-    if(!estate_name){
-        console.log('estate_name is null');
+        title: "Sales Report",
     }
-    var module_property = require('../module/module_property');
-    module_property.search_property(estate_name, sales_type, low_range, high_range,function(cb){
-        if(cb.length > 0){
-            ret.properties = cb;
-        }
-        res.render('../views/property_search', ret);
+    var branch = require('../module/module_branch');
+    var promise = new Promise(function(resolve, reject){
+        branch.select_branch(function(result){
+            ret.branches = result;
+            resolve(ret);
+        });
+    });
+    promise.then(function(result){
+        var temp = [];
+        var transection = require('../module/module_transection');
+        ret.branches.forEach(function(element, index) {
+            var temp1 = element;
+            transection.get_salling_report_by_branch_id(element.id, function(selling_report){
+                temp1.selling_report = selling_report;
+                temp.push(temp1);
+                
+                if(temp.length == ret.branches.length){
+                    console.log(ret);
+                    res.render('../views/salereport', ret);
+                }
+            });
+        }, this);
     });
 });
 
-
-app.get('/property/details/:ref_no/edit', function(req, res){
-    var ref_no = req.params.ref_no;
-    res.send('asdf');
+app.get('/rentalreport', function(req, res){
+    var ret = {
+        pageTitle: 'hkproperty',
+        title: "Rental Report",
+    }
+    var branch = require('../module/module_branch');
+    var promise = new Promise(function(resolve, reject){
+        branch.select_branch(function(result){
+            ret.branches = result;
+            resolve(ret);
+        });
+    });
+    promise.then(function(result){
+        var temp = [];
+        var transection = require('../module/module_transection');
+        ret.branches.forEach(function(element, index) {
+            var temp1 = element;
+            transection.get_rental_report_by_branch_id(element.id, function(selling_report){
+                temp1.selling_report = selling_report;
+                temp.push(temp1);
+                
+                if(temp.length == ret.branches.length){
+                    console.log(ret);
+                    res.render('../views/rentreport', ret);
+                }
+            });
+        }, this);
+    });
 });
 
 module.exports = app;
