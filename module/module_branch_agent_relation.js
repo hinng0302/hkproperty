@@ -13,7 +13,7 @@ const knex = require('knex')({
 	connection: options
 });
 
-const fields = { id,branch_id,agent_id,status,created_at,modified_at };
+// const fields = { id,branch_id,agent_id,status,created_at,modified_at };
 
 function select_branch_agent_relation(cb){
 		 // select * from branch_agent_relation
@@ -21,6 +21,14 @@ function select_branch_agent_relation(cb){
 		cb(result);
 	});
 }
+function select_agent_by_branch_id(id, cb){
+	knex('branch_agent_relation')
+	.join('agent', 'agent.id', 'branch_agent_relation.agent_id')
+	.where('branch_id', id).then(function(result){
+		cb(result);
+	});
+}
+
 function create_branch_agent_relation(data, cb){ 
 		 // insert into branch_agent_relation() values(................)
  	knex('branch_agent_relation').insert({
@@ -50,6 +58,7 @@ function delete_branch_agent_relation(id, cb){
 }
 module.exports = {
 	select_branch_agent_relation: select_branch_agent_relation,
+	select_agent_by_branch_id:select_agent_by_branch_id,
 	create_branch_agent_relation: create_branch_agent_relation,
 	update_branch_agent_relation: update_branch_agent_relation,
 	delete_branch_agent_relation: delete_branch_agent_relation

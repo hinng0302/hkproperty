@@ -19,6 +19,12 @@ function select_branch(cb){
 		cb(result);
 	});
 }
+function select_branch_by_code(branchcode, cb){
+	knex('branch').where( {branch_code: branchcode}).then(function(result){
+		cb(result);
+	});
+}
+
 function create_branch(data, cb){ 
 		 // insert into branch() values(................)
  	knex('branch').insert({
@@ -48,6 +54,7 @@ function delete_branch(id, cb){
 }
 module.exports = {
 	select_branch: select_branch,
+	select_branch_by_code: select_branch_by_code,
 	create_branch: create_branch,
 	update_branch: update_branch,
 	delete_branch: delete_branch

@@ -290,7 +290,40 @@ app.get('/branch', function(req, res){
             ret.agent = req.session.agent.agent_name_en;
             ret.agent_details = req.session.agent;
         }
-        res.render('branch_listing', ret);
+        res.render('../views/branch_listing', ret);
+    });
+});
+app.get('/branch/:branchcode', function(req, res){
+    var branchcode = req.params.branchcode;
+    
+    var ret = {
+        pageTitle: 'hkproperty: branch',
+        title: "Branch"
+    };
+    var branch_module = require('../module/module_branch');
+    var promise = new Promise(function(resolve, reject){
+        branch_module.select_branch_by_code(branchcode,function(result){
+            ret.branches = result;
+            resolve(result);
+        });
+    });
+
+    promise.then(function(result){
+        var branch_id = result[0].id;
+        var b_a_module = require('../module/module_branch_agent_relation');
+        return new Promise(function(resolve, reject){
+            b_a_module.select_agent_by_branch_id(branch_id, function(result){
+                ret.agents = result;
+                resolve(result);
+            });
+        }).then(function(result){
+            ret.branch_agent = result;
+            if(req.session.is_login){
+                ret.agent = req.session.agent.agent_name_en;
+                ret.agent_details = req.session.agent;
+            }
+            res.render('../views/branch_agent_listing', ret);
+        });
     });
 });
 
@@ -339,6 +372,12 @@ app.get('/newproperty/property_owner/:property_id', function(req, res){
                 ret.district = districts;
                 resolve(result);
             });
+        }).then(function(result){
+            var prop_owner =require("../module/module_property_owner_relation");
+            prop_owner.select_property_owner_relation_by_property_id(req.params.property_id, function(property_owner){
+                result.owners = property_owner;
+                resolve(result);
+            });
         });
     }).then(function(result){
         
@@ -346,17 +385,55 @@ app.get('/newproperty/property_owner/:property_id', function(req, res){
             pageTitle: 'hkproperty: ' +result.property.estate_name_en,
             title: "( Ref:"+result.property.ref_no+") "+result.property.estate_name_en,
             properties: result.property,
-            owners: [],//result.owners,
+            owners: result.owners,//result.owners,
             distrcit: result.district
         };
         if(req.session.is_login) {
             ret.agent = req.session.agent.agent_name_en;
             ret.agent_details = req.session.agent;
         }
-        // console.log(ret);
+        console.log(ret);
         res.render('../views/property_details_edit', ret);
     });
 });
+app.get('/searchproperty', function(req, res){
+    var ret = {
+        pageTitle: 'hkproperty',
+        title: "Search Property",
+        properties: []
+    };
+    
+    if(req.session.is_login) {
+        ret.agent = req.session.agent.agent_name_en;
+        ret.agent_details = req.session.agent;
+    }
+    console.log(ret);
+    res.render('../views/property_search', ret);
+});
+app.post('/searchproperty',function(req, res){
+    var ret = {
+        pageTitle: 'hkproperty',
+        title: "Search Property",
+        properties: []
+    };
+    console.log(req.body);
+    var estate_name = req.body.estate_name;
+    var sales_type = req.body.salestype;
+    var low_range= req.body.low_range;
+    var high_range=req.body.hight_range;
+    console.log(estate_name);
+    if(!estate_name){
+        console.log('estate_name is null');
+    }
+    var module_property = require('../module/module_property');
+    module_property.search_property(estate_name, sales_type, low_range, high_range,function(cb){
+        if(cb.length > 0){
+            ret.properties = cb;
+        }
+        res.render('../views/property_search', ret);
+    });
+});
+
 
 app.get('/property/details/:ref_no/edit', function(req, res){
     var ref_no = req.params.ref_no;

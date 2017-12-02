@@ -1,0 +1,23 @@
+form(action="/webapp/searchproperty" method="post")
+    .container
+        .row
+            h2 Search Box:
+        .row
+            .col-md-3.col-xs-12 Estate Name:
+            .col-md-4.col-xs-12
+                input(name='estate_name' type="text")
+        .row
+            .col-md-3.col-xs-12 Price Range:
+            .col-md-2.col-xs-12
+                input(name="low_range" type='number')
+            .col-md-1.col-xs-12 -
+            .col-md-2.col-xs.12
+                input(name="hight_range" type='number')
+        .row
+            .col-md-3.col-xs-12 Sales Type:
+            .col-md-4.col-xs-12 
+                select(name='salestype')
+                    option(value='selling_price') Sale
+                    option(value='rental_price') Rent
+            .col-md-5.col-xs-12
+                button.btn.btn-primary(type=submit) Search

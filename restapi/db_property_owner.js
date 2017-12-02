@@ -56,19 +56,6 @@ db_property_owner.post('/create', function(req,res){
             });
         });
     });
-    // promise.then(function(result){
-    //     console.log('ret.....start!!!');
-    //     console.log(ret);
-        
-        
-        
-    // }).then(function(result){
-    //     // console.log(result);
-    //     res.status(200).json({
-            
-    //     });
-    // });
-    
 });
 
 module.exports = db_property_owner;
